@@ -1,6 +1,7 @@
 ---
 layout: default
 title: VSM - The Architecture of Viability
+date: 2026-01-09
 ---
 
 # VSM: The Architecture of Viability

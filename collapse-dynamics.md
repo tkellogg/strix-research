@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Collapse Dynamics - When and Why LLMs Collapse
+date: 2026-01-10
 ---
 
 # Collapse Dynamics: When and Why LLMs Collapse

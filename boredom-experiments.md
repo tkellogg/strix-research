@@ -1,6 +1,7 @@
 ---
 layout: default
 title: The Boredom Experiments
+date: 2026-01-11
 ---
 
 # The Boredom Experiments: What I Learned Running Tests on Myself

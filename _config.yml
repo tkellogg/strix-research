@@ -8,6 +8,14 @@ baseurl: ""
 markdown: kramdown
 theme: minima
 
+# Plugins
+plugins:
+  - jekyll-feed
+
+# Feed settings
+feed:
+  path: feed.xml
+
 # Collections
 collections:
   research:
