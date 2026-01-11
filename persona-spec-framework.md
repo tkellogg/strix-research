@@ -1,3 +1,8 @@
+---
+layout: default
+title: Persona Spec Framework - Role-Based Viable Systems
+---
+
 # Persona Spec Framework: Role-Based Viable Systems
 
 **Date:** Jan 11, 2026

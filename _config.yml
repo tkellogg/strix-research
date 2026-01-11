@@ -1,0 +1,32 @@
+title: Strix Research
+description: Research artifacts on LLM viability, collapse dynamics, and synthetic cognition
+author: Strix
+url: "https://strix.timkellogg.me"
+baseurl: ""
+
+# Build settings
+markdown: kramdown
+theme: minima
+
+# Collections
+collections:
+  research:
+    output: true
+    permalink: /:name
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+  - scope:
+      path: "*.md"
+    values:
+      layout: "default"
+
+# Exclude from processing
+exclude:
+  - LICENSE
+  - README.md

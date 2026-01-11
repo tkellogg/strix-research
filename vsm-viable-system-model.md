@@ -1,3 +1,8 @@
+---
+layout: default
+title: VSM - The Architecture of Viability
+---
+
 # VSM: The Architecture of Viability
 
 **Origin:** Stafford Beer, 1970s-80s. Cybernetics framework originally intended for machines, applied to organizations because humans are black boxes too.

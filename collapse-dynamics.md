@@ -1,3 +1,8 @@
+---
+layout: default
+title: Collapse Dynamics - When and Why LLMs Collapse
+---
+
 # Collapse Dynamics: When and Why LLMs Collapse
 
 **Status:** Active research (Jan 2026)
