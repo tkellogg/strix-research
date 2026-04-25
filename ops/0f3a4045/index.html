@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Strix Ops</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         max-width: 1200px; margin: 2em auto; padding: 0 1em; color: #222; }
+  h1 { font-size: 1.5em; margin-bottom: 0.2em; }
+  .meta { color: #888; font-size: 0.85em; margin-bottom: 1.5em; }
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+             gap: 0.5em; margin-bottom: 1.5em; }
+  .stat { background: #f5f5f5; padding: 0.7em 1em; border-radius: 6px; }
+  .stat .num { font-size: 1.4em; font-weight: 600; color: #1a73e8; }
+  .stat .label { font-size: 0.75em; color: #666; text-transform: uppercase; }
+  .tabs { display: flex; gap: 0.3em; border-bottom: 2px solid #eee; margin-bottom: 1em;
+          flex-wrap: wrap; }
+  .tab { padding: 0.5em 1em; cursor: pointer; border: none; background: transparent;
+         font-size: 0.95em; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+  .tab.active { border-bottom-color: #1a73e8; color: #1a73e8; font-weight: 600; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9em; margin: 1em 0; }
+  th, td { padding: 0.4em 0.7em; text-align: left; border-bottom: 1px solid #eee; }
+  th { background: #fafafa; font-weight: 600; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  canvas { max-height: 320px; }
+  .chart-wrap { background: #fff; padding: 0.5em; margin: 0.7em 0; }
+  .backlog-item { background: #fffbe6; border-left: 3px solid #f59e0b; padding: 0.7em 1em;
+                  margin: 0.7em 0; border-radius: 4px; }
+  .backlog-item h3 { margin: 0 0 0.3em 0; font-size: 1em; }
+  .backlog-item .status { color: #92400e; font-size: 0.85em; font-weight: 500; }
+  .backlog-item .blocker { color: #555; font-size: 0.9em; margin-top: 0.3em; }
+  details { margin: 0.5em 0; }
+  summary { cursor: pointer; color: #555; font-size: 0.9em; }
+  pre { background: #f9f9f9; padding: 0.5em; border-radius: 4px; font-size: 0.8em;
+        overflow-x: auto; }
+</style>
+</head>
+<body>
+<h1>Strix Ops Dashboard</h1>
+<div class="meta">Window: 14 days · Generated 2026-04-25T11:13:34.808804+00:00 UTC · No public link</div>
+
+<div class="summary" id="summary"></div>
+
+<div class="tabs">
+  <button class="tab active" data-panel="overview">Overview</button>
+  <button class="tab" data-panel="pollers">Pollers vs Sessions</button>
+  <button class="tab" data-panel="tools">Tool Usage</button>
+  <button class="tab" data-panel="failures">Failures</button>
+  <button class="tab" data-panel="messages">Discord Messages</button>
+  <button class="tab" data-panel="backlog">Backlog</button>
+  <button class="tab" data-panel="raw">Raw Stats</button>
+</div>
+
+<div id="overview" class="panel active">
+  <div class="chart-wrap"><canvas id="event-mix"></canvas></div>
+  <div class="chart-wrap"><canvas id="sessions-timeseries"></canvas></div>
+</div>
+
+<div id="pollers" class="panel">
+  <p style="color:#555">scheduled_tick = cron-fired tick. claude_session = LLM actually invoked. Ratio &gt; 1 means many ticks gate-skip Claude (cheap). Ratio = 1 means every tick wakes Claude.</p>
+  <div class="chart-wrap"><canvas id="ticks-vs-sessions"></canvas></div>
+  <h3>Poller invocations by job</h3>
+  <table id="poller-table"><thead><tr><th>Job</th><th class="num">Invocations</th></tr></thead><tbody></tbody></table>
+  <h3>Tick types</h3>
+  <table id="ticktype-table"><thead><tr><th>Type</th><th class="num">Count</th></tr></thead><tbody></tbody></table>
+</div>
+
+<div id="tools" class="panel">
+  <div class="chart-wrap"><canvas id="top-tools"></canvas></div>
+  <p style="color:#555">Avg tool calls per session: <strong id="avg-tools"></strong></p>
+</div>
+
+<div id="failures" class="panel">
+  <h3>Tool timeouts by tool</h3>
+  <table id="timeout-table"><thead><tr><th>Tool</th><th class="num">Count</th></tr></thead><tbody></tbody></table>
+  <h3>Exceptions by type</h3>
+  <table id="exception-table"><thead><tr><th>Type</th><th class="num">Count</th></tr></thead><tbody></tbody></table>
+  <details><summary>Recent timeouts (up to 25)</summary><pre id="recent-timeouts"></pre></details>
+  <details><summary>Recent exceptions (up to 25)</summary><pre id="recent-exceptions"></pre></details>
+</div>
+
+<div id="messages" class="panel">
+  <div class="chart-wrap"><canvas id="messages-timeseries"></canvas></div>
+</div>
+
+<div id="backlog" class="panel">
+  <p style="color:#555">Data not currently captured — instrumentation needed.</p>
+  <div id="backlog-list"></div>
+</div>
+
+<div id="raw" class="panel">
+  <h3>All event types</h3>
+  <table id="event-table"><thead><tr><th>Event</th><th class="num">Count</th></tr></thead><tbody></tbody></table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script id="data" type="application/json">{"generated_at": "2026-04-25T11:13:34.808804+00:00", "window_days": 14, "total_events": 28395, "by_event": {"tool_call": 12251, "claude_session": 3626, "claude_text": 3131, "file_read": 1841, "claude_response": 1808, "vector_search": 1630, "scheduled_tick": 935, "algedonic_signal": 856, "outgoing_message": 837, "introspection_hook_debug": 822, "discord_message": 384, "discord_reaction": 222, "tool_timeout": 26, "exception": 23, "introspection_signal": 3}, "top_tools": {"Bash": 3566, "mcp__discord-tools__journal": 2721, "ToolSearch": 2388, "Read": 1326, "mcp__discord-tools__send_message": 822, "Edit": 432, "Grep": 318, "mcp__discord-tools__fetch_history": 134, "Write": 129, "Skill": 76, "TodoWrite": 57, "Glob": 49, "mcp__discord-tools__react": 48, "mcp__discord-tools__search_everything": 44, "mcp__discord-tools__send_image": 42, "mcp__discord-tools__web_fetch": 36, "Agent": 16, "WebFetch": 10, "WebSearch": 7, "mcp__discord-tools__schedule_job": 7}, "tool_timeouts": {"Bash": 13, "Read": 9, "mcp__discord-tools__journal": 2, "Write": 1, "Grep": 1}, "exceptions": {"AttributeError": 9, "Exception": 9, "DiscordServerError": 3, "TimeoutError": 2}, "tick_types": {"perch_time": 169, "job_execution": 766}, "poller_invocations": {"20260423-010606": 345, "20260405-015619": 113, "20260418-002301": 89, "20260420-111140": 80, "20260406-014047": 56, "test-job": 36, "20251215-124422": 14, "20260125-223440": 12, "20260417-150416": 7, "20260312-224100": 6, "20260116-190024": 6, "20260122-110306": 1, "20260417-105720": 1}, "sessions_per_day": [{"day": "2026-04-11", "sessions": 128, "ticks": 23}, {"day": "2026-04-12", "sessions": 67, "ticks": 30}, {"day": "2026-04-13", "sessions": 101, "ticks": 31}, {"day": "2026-04-14", "sessions": 98, "ticks": 34}, {"day": "2026-04-15", "sessions": 96, "ticks": 31}, {"day": "2026-04-16", "sessions": 93, "ticks": 32}, {"day": "2026-04-17", "sessions": 87, "ticks": 28}, {"day": "2026-04-18", "sessions": 111, "ticks": 41}, {"day": "2026-04-19", "sessions": 122, "ticks": 39}, {"day": "2026-04-20", "sessions": 145, "ticks": 42}, {"day": "2026-04-21", "sessions": 117, "ticks": 55}, {"day": "2026-04-22", "sessions": 108, "ticks": 56}, {"day": "2026-04-23", "sessions": 204, "ticks": 192}, {"day": "2026-04-24", "sessions": 233, "ticks": 199}, {"day": "2026-04-25", "sessions": 107, "ticks": 102}], "messages_per_day": [{"day": "2026-04-11", "incoming": 32, "outgoing": 106}, {"day": "2026-04-12", "incoming": 26, "outgoing": 42}, {"day": "2026-04-13", "incoming": 12, "outgoing": 69}, {"day": "2026-04-14", "incoming": 9, "outgoing": 63}, {"day": "2026-04-15", "incoming": 8, "outgoing": 66}, {"day": "2026-04-16", "incoming": 27, "outgoing": 65}, {"day": "2026-04-17", "incoming": 28, "outgoing": 50}, {"day": "2026-04-18", "incoming": 32, "outgoing": 62}, {"day": "2026-04-19", "incoming": 72, "outgoing": 78}, {"day": "2026-04-20", "incoming": 20, "outgoing": 82}, {"day": "2026-04-21", "incoming": 32, "outgoing": 45}, {"day": "2026-04-22", "incoming": 44, "outgoing": 52}, {"day": "2026-04-23", "incoming": 10, "outgoing": 11}, {"day": "2026-04-24", "incoming": 23, "outgoing": 34}, {"day": "2026-04-25", "incoming": 9, "outgoing": 12}], "summary": {"total_events": 28395, "claude_sessions": 1813, "session_starts": 1817, "scheduled_ticks": 935, "tool_calls": 12251, "tool_timeouts": 26, "exceptions": 23, "incoming_messages": 384, "outgoing_messages": 837, "avg_tools_per_session": 6.42, "tick_to_session_ratio": 0.51}, "recent_exceptions": [{"t": "2026-04-25T01:43:32.395237+00:00", "type": "Exception", "context": "execute_job:test-job", "message": "API error"}, {"t": "2026-04-25T01:43:32.343728+00:00", "type": "AttributeError", "context": "execute_job:test-job", "message": "'_MissingSentinel' object has no attribute 'is_set'"}, {"t": "2026-04-22T01:18:53.972117+00:00", "type": "DiscordServerError", "context": "on_message", "message": "503 Service Unavailable (error code: 0): upstream connect error or disconnect/reset before headers. reset reason: remote connection failure, transport failure reason: immediate connect error: No such "}, {"t": "2026-04-22T01:18:28.488646+00:00", "type": "DiscordServerError", "context": "on_message", "message": "503 Service Unavailable (error code: 0): upstream connect error or disconnect/reset before headers. reset reason: remote connection failure, transport failure reason: immediate connect error: No such "}, {"t": "2026-04-16T08:16:15.254184+00:00", "type": "Exception", "context": "execute_job:test-job", "message": "API error"}, {"t": "2026-04-16T08:16:15.198563+00:00", "type": "AttributeError", "context": "execute_job:test-job", "message": "'_MissingSentinel' object has no attribute 'is_set'"}, {"t": "2026-04-15T16:36:47.752556+00:00", "type": "DiscordServerError", "context": "guild_reaction", "message": "503 Service Unavailable (error code: 0): upstream connect error or disconnect/reset before headers. reset reason: connection termination"}, {"t": "2026-04-15T08:41:51.581925+00:00", "type": "Exception", "context": "execute_job:test-job", "message": "API error"}, {"t": "2026-04-15T08:41:51.527913+00:00", "type": "AttributeError", "context": "execute_job:test-job", "message": "'_MissingSentinel' object has no attribute 'is_set'"}, {"t": "2026-04-14T08:40:22.106092+00:00", "type": "Exception", "context": "execute_job:test-job", "message": "API error"}, {"t": "2026-04-14T08:40:22.049035+00:00", "type": "AttributeError", "context": "execute_job:test-job", "message": "'_MissingSentinel' object has no attribute 'is_set'"}, {"t": "2026-04-14T02:34:10.386077+00:00", "type": "Exception", "context": "execute_job:test-job", "message": "API error"}, {"t": "2026-04-14T02:34:10.334587+00:00", "type": "AttributeError", "context": "execute_job:test-job", "message": "'_MissingSentinel' object has no attribute 'is_set'"}, {"t": "2026-04-13T08:57:20.555093+00:00", "type": "Exception", "context": "execute_job:test-job", "message": "API error"}, {"t": "2026-04-13T08:57:20.498638+00:00", "type": "AttributeError", "context": "execute_job:test-job", "message": "'_MissingSentinel' object has no attribute 'is_set'"}, {"t": "2026-04-12T09:25:39.840407+00:00", "type": "Exception", "context": "execute_job:test-job", "message": "API error"}, {"t": "2026-04-12T09:25:39.786780+00:00", "type": "AttributeError", "context": "execute_job:test-job", "message": "'_MissingSentinel' object has no attribute 'is_set'"}, {"t": "2026-04-12T05:34:26.726876+00:00", "type": "TimeoutError", "context": "scheduled_checkin", "message": "Timed out 3 times (limit: 3), last tool: Write"}, {"t": "2026-04-12T05:34:26.528844+00:00", "type": "TimeoutError", "context": "process_with_claude", "message": "Timed out 3 times (limit: 3), last tool: Write"}, {"t": "2026-04-11T15:18:20.696629+00:00", "type": "Exception", "context": "execute_job:test-job", "message": "API error"}, {"t": "2026-04-11T15:18:20.655104+00:00", "type": "AttributeError", "context": "execute_job:test-job", "message": "'_MissingSentinel' object has no attribute 'is_set'"}, {"t": "2026-04-11T15:12:46.015437+00:00", "type": "Exception", "context": "execute_job:test-job", "message": "API error"}, {"t": "2026-04-11T15:12:45.977689+00:00", "type": "AttributeError", "context": "execute_job:test-job", "message": "'_MissingSentinel' object has no attribute 'is_set'"}], "recent_timeouts": [{"t": "2026-04-22T20:40:03.984704+00:00", "tool": "Bash", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-21T23:17:14.734163+00:00", "tool": "Read", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-21T23:04:03.590615+00:00", "tool": "Bash", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-21T13:38:25.015695+00:00", "tool": "Read", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-21T13:34:44.689142+00:00", "tool": "Bash", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-20T19:13:59.298059+00:00", "tool": "Bash", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-20T11:08:57.235891+00:00", "tool": "Read", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-20T06:22:02.778202+00:00", "tool": "mcp__discord-tools__journal", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-19T18:03:31.687643+00:00", "tool": "Bash", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-19T15:01:45.299777+00:00", "tool": "Bash", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-19T10:20:32.238914+00:00", "tool": "Bash", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-18T23:26:23.074806+00:00", "tool": "Bash", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-18T00:28:29.742842+00:00", "tool": "mcp__discord-tools__journal", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-17T23:30:46.391219+00:00", "tool": "Grep", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-16T02:18:45.082514+00:00", "tool": "Bash", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-12T23:03:33.399607+00:00", "tool": "Bash", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-12T12:01:44.855235+00:00", "tool": "Bash", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-12T09:01:46.973891+00:00", "tool": "Bash", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-12T07:27:19.216004+00:00", "tool": "Read", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-12T06:02:21.935559+00:00", "tool": "Bash", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-12T05:34:26.229056+00:00", "tool": "Write", "timeout_s": 90.0, "count": 3, "max": 3, "recovery": "abort"}, {"t": "2026-04-12T05:29:35.079830+00:00", "tool": "Read", "timeout_s": 90.0, "count": 2, "max": 3, "recovery": "continue"}, {"t": "2026-04-12T05:27:58.374334+00:00", "tool": "Read", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}, {"t": "2026-04-12T01:33:22.342076+00:00", "tool": "Read", "timeout_s": 90.0, "count": 2, "max": 3, "recovery": "continue"}, {"t": "2026-04-12T01:29:27.480878+00:00", "tool": "Read", "timeout_s": 90.0, "count": 1, "max": 3, "recovery": "continue"}], "backlog": [{"id": "token-usage", "title": "Token usage by event/source/time", "status": "Not instrumented yet", "blocker": "bot_runtime.py needs to capture `usage` field from Anthropic API responses (input_tokens, output_tokens, cache_read_input_tokens, cache_creation_input_tokens) and emit a `claude_usage` event tied to trace_id."}, {"id": "llm-source-attribution", "title": "LLM invocations grouped by source (poller, discord msg, scheduled tick, etc)", "status": "Partially possible via trace_id correlation", "blocker": "claude_session events don't record what triggered them. Workaround: join scheduled_tick + claude_session via trace_id when timestamps line up. Cleaner fix: bot_runtime emits trigger_kind on session start."}, {"id": "llm-retries", "title": "LLM retry count tracking", "status": "Not currently logged as a discrete event", "blocker": "Add retry_event emit in claude_sdk wrapper when API call retries."}]}</script>
+<script>
+const D = JSON.parse(document.getElementById('data').textContent);
+
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById(t.dataset.panel).classList.add('active');
+}));
+
+const summaryEl = document.getElementById('summary');
+const stats = D.summary;
+const labels = {
+  total_events: 'Total events',
+  session_starts: 'Claude sessions',
+  scheduled_ticks: 'Scheduled ticks',
+  tool_calls: 'Tool calls',
+  tool_timeouts: 'Tool timeouts',
+  exceptions: 'Exceptions',
+  incoming_messages: 'Incoming msgs',
+  outgoing_messages: 'Outgoing msgs',
+  avg_tools_per_session: 'Avg tools/session',
+  tick_to_session_ratio: 'Tick:session ratio',
+};
+for (const [k, v] of Object.entries(stats)) {
+  if (k === 'claude_sessions') continue;
+  if (v == null) continue;
+  const div = document.createElement('div');
+  div.className = 'stat';
+  div.innerHTML = `<div class="num">${v}</div><div class="label">${labels[k] || k}</div>`;
+  summaryEl.appendChild(div);
+}
+
+document.getElementById('avg-tools').textContent = stats.avg_tools_per_session;
+
+function fillTable(id, obj) {
+  const tbody = document.querySelector(`#${id} tbody`);
+  for (const [k, v] of Object.entries(obj)) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${k}</td><td class="num">${v}</td>`;
+    tbody.appendChild(tr);
+  }
+}
+fillTable('event-table', D.by_event);
+fillTable('poller-table', D.poller_invocations);
+fillTable('ticktype-table', D.tick_types);
+fillTable('timeout-table', D.tool_timeouts);
+fillTable('exception-table', D.exceptions);
+
+document.getElementById('recent-timeouts').textContent = JSON.stringify(D.recent_timeouts, null, 2);
+document.getElementById('recent-exceptions').textContent = JSON.stringify(D.recent_exceptions, null, 2);
+
+const backlog = document.getElementById('backlog-list');
+for (const item of D.backlog) {
+  const div = document.createElement('div');
+  div.className = 'backlog-item';
+  div.innerHTML = `<h3>${item.title}</h3>
+                   <div class="status">${item.status}</div>
+                   <div class="blocker">${item.blocker}</div>`;
+  backlog.appendChild(div);
+}
+
+const eventLabels = Object.keys(D.by_event).slice(0, 12);
+const eventValues = eventLabels.map(k => D.by_event[k]);
+new Chart(document.getElementById('event-mix'), {
+  type: 'bar',
+  data: { labels: eventLabels, datasets: [{ label: 'Events', data: eventValues, backgroundColor: '#1a73e8' }] },
+  options: { plugins: { title: { display: true, text: 'Event mix (top 12)' } } }
+});
+
+const days = D.sessions_per_day.map(x => x.day);
+const sessionsByDay = D.sessions_per_day.map(x => x.sessions);
+const ticksByDay = D.sessions_per_day.map(x => x.ticks);
+new Chart(document.getElementById('sessions-timeseries'), {
+  type: 'line',
+  data: { labels: days, datasets: [
+    { label: 'Claude sessions', data: sessionsByDay, borderColor: '#1a73e8', tension: 0.2 },
+    { label: 'Scheduled ticks', data: ticksByDay, borderColor: '#f59e0b', tension: 0.2 },
+  ]},
+  options: { plugins: { title: { display: true, text: 'Sessions vs ticks per day' } } }
+});
+
+new Chart(document.getElementById('ticks-vs-sessions'), {
+  type: 'bar',
+  data: { labels: days, datasets: [
+    { label: 'Scheduled ticks', data: ticksByDay, backgroundColor: '#f59e0b' },
+    { label: 'Claude sessions', data: sessionsByDay, backgroundColor: '#1a73e8' },
+  ]},
+  options: { plugins: { title: { display: true, text: 'Ticks vs sessions (gap = gate-skip wins)' } } }
+});
+
+const toolNames = Object.keys(D.top_tools);
+const toolValues = toolNames.map(k => D.top_tools[k]);
+new Chart(document.getElementById('top-tools'), {
+  type: 'bar',
+  data: { labels: toolNames, datasets: [{ label: 'Calls', data: toolValues, backgroundColor: '#1a73e8' }] },
+  options: { indexAxis: 'y', plugins: { title: { display: true, text: 'Top tools' } } }
+});
+
+const msgDays = D.messages_per_day.map(x => x.day);
+const incoming = D.messages_per_day.map(x => x.incoming);
+const outgoing = D.messages_per_day.map(x => x.outgoing);
+new Chart(document.getElementById('messages-timeseries'), {
+  type: 'line',
+  data: { labels: msgDays, datasets: [
+    { label: 'Incoming (Tim)', data: incoming, borderColor: '#1a73e8', tension: 0.2 },
+    { label: 'Outgoing (Strix)', data: outgoing, borderColor: '#10b981', tension: 0.2 },
+  ]},
+  options: { plugins: { title: { display: true, text: 'Discord messages per day' } } }
+});
+</script>
+</body>
+</html>
