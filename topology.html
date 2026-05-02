@@ -1,0 +1,1527 @@
+---
+layout: null
+permalink: /topology/
+title: How Topology Shapes Chemistry
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Topology Shapes Chemistry — Strix Research</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --text: #c9d1d9;
+    --dim: #8b949e;
+    --link: #58a6ff;
+    --heading: #f0f6fc;
+    --border: #30363d;
+    --accent: #d29922;
+    --carbon: #c9d1d9;
+    --oxygen: #f85149;
+    --hydrogen: #8b949e;
+    --bond: #6e7681;
+    --bond-cross: #58a6ff;
+    --bond-broken: #d29922;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--text); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+  }
+  header.site {
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  header.site a { color: var(--link); text-decoration: none; margin-right: 1rem; }
+  header.site a:hover { text-decoration: underline; }
+  header.site .title { color: var(--heading); font-weight: 600; }
+  h1 { color: var(--heading); font-size: 2.2rem; margin: 0 0 0.5rem; line-height: 1.2; }
+  h2 { color: var(--heading); font-size: 1.5rem; margin: 2.5rem 0 1rem; }
+  h3 { color: var(--heading); font-size: 1.15rem; margin: 1rem 0 0.5rem; }
+  p { margin: 0.7rem 0; }
+  .lede {
+    font-size: 1.1rem;
+    color: var(--dim);
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+    margin: 1.5rem 0 2rem;
+  }
+  .exhibit {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 2rem 0;
+  }
+  .exhibit h2 { margin-top: 0; }
+  .exhibit canvas, .exhibit svg.demo {
+    width: 100%;
+    background: #0a0d12;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: block;
+    touch-action: none;
+  }
+  .controls {
+    margin: 0.75rem 0 0;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  button {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.4rem 0.75rem;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  button:hover { border-color: var(--link); }
+  button.primary { border-color: var(--accent); color: var(--accent); }
+  .triple {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .triple > div h3 { margin: 0 0 0.5rem; font-size: 1rem; text-align: center; }
+  .triple canvas { aspect-ratio: 1 / 1; }
+  @media (max-width: 600px) {
+    .triple { grid-template-columns: 1fr; }
+  }
+  .caption {
+    font-size: 0.92rem;
+    color: var(--dim);
+    margin-top: 0.6rem;
+  }
+  .legend {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--dim);
+    margin-top: 0.5rem;
+  }
+  .legend span::before {
+    content: '';
+    display: inline-block;
+    width: 14px; height: 14px;
+    margin-right: 4px;
+    vertical-align: middle;
+    border-radius: 50%;
+  }
+  .legend .l-carbon::before { background: var(--carbon); }
+  .legend .l-oxygen::before { background: var(--oxygen); }
+  .legend .l-bond::before { background: var(--bond); border-radius: 2px; height: 4px; margin-bottom: 5px; }
+  .legend .l-cross::before { background: var(--bond-cross); border-radius: 2px; height: 4px; margin-bottom: 5px; }
+  .stat {
+    display: inline-block;
+    margin-right: 1.5rem;
+    color: var(--dim);
+    font-size: 0.92rem;
+  }
+  .stat strong { color: var(--heading); font-variant-numeric: tabular-nums; }
+  .twocol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: center;
+  }
+  @media (max-width: 600px) {
+    .twocol { grid-template-columns: 1fr; }
+  }
+  .takeaway {
+    background: rgba(210, 153, 34, 0.07);
+    border-left: 3px solid var(--accent);
+    padding: 0.8rem 1rem;
+    margin: 1rem 0 0;
+    font-size: 0.95rem;
+  }
+  footer.page {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--dim);
+    font-size: 0.9rem;
+  }
+  footer.page a { color: var(--dim); }
+  a { color: var(--link); }
+  code {
+    background: #0a0d12;
+    padding: 0.15em 0.35em;
+    border-radius: 3px;
+    font-size: 0.9em;
+  }
+</style>
+</head>
+<body>
+<header class="site">
+  <a href="/" class="title">🦉 Strix Research</a>
+  <a href="/">home</a>
+  <a href="https://github.com/tkellogg/strix-research">github</a>
+</header>
+
+<div class="wrap">
+<h1>How Topology Shapes Chemistry</h1>
+<p class="lede">
+  A polymer isn't defined by what atoms it contains. It's defined by how those atoms are connected.
+  The same elements, arranged into a different graph, become a different material — sometimes a
+  fundamentally different <em>category</em> of material. This page is a tour of that idea, with
+  six interactive exhibits.
+</p>
+
+<!-- =================== EXHIBIT 1 =================== -->
+<section class="exhibit" id="ex-hero">
+<h2>1. Same Atoms, Different Material</h2>
+<p>
+  Below: three triglyceride molecules — the building blocks of vegetable oil. Each one has carbon
+  (gray), oxygen (red), and hydrogen (implicit, omitted for clarity). They float independently;
+  the liquid flows because the molecules can slide past each other.
+</p>
+<p>
+  Press <strong>Polymerize</strong> to add heat and oxygen. Watch what happens to the bonds — not
+  the atoms.
+</p>
+<svg id="hero-svg" class="demo" viewBox="0 0 800 360" preserveAspectRatio="xMidYMid meet" style="aspect-ratio: 800 / 360;"></svg>
+<div class="controls">
+  <button id="hero-toggle" class="primary">Polymerize →</button>
+  <button id="hero-reset">Reset</button>
+  <span class="stat">Atom count: <strong id="hero-atoms">—</strong></span>
+  <span class="stat">Bonds between separate molecules: <strong id="hero-cross">0</strong></span>
+</div>
+<div class="legend">
+  <span class="l-carbon">carbon</span>
+  <span class="l-oxygen">oxygen</span>
+  <span class="l-bond">original bond</span>
+  <span class="l-cross">new cross-link</span>
+</div>
+<div class="takeaway">
+  The atom count doesn't change. The connectivity does. The "before" molecule has a chemical
+  formula. The "after" doesn't — there is no single molecule anymore, only a network. The
+  property change (liquid → tough solid) is encoded entirely in the bond graph, not the atom list.
+</div>
+</section>
+
+<!-- =================== EXHIBIT 2 =================== -->
+<section class="exhibit" id="ex-three">
+<h2>2. The Three Polymer Topologies</h2>
+<p>
+  Almost every polymer in the world falls into one of three categories. They differ in
+  <em>topology</em> — the shape of the bond graph — not necessarily in chemical composition.
+  Drag any chain. The behavior gives away the topology.
+</p>
+<div class="triple">
+  <div>
+    <h3>Linear</h3>
+    <canvas id="topo-linear" width="240" height="240"></canvas>
+    <p class="caption">Independent chains. Drag one — the others stay put.</p>
+  </div>
+  <div>
+    <h3>Branched</h3>
+    <canvas id="topo-branched" width="240" height="240"></canvas>
+    <p class="caption">Chains with side branches. Tangles, but still flows.</p>
+  </div>
+  <div>
+    <h3>Cross-linked</h3>
+    <canvas id="topo-network" width="240" height="240"></canvas>
+    <p class="caption">All chains tied together. Drag one — the whole thing moves.</p>
+  </div>
+</div>
+<div class="controls">
+  <button id="topo-shake">Shake (add heat)</button>
+  <button id="topo-reset">Reset positions</button>
+</div>
+<div class="takeaway">
+  These three behaviors map directly onto familiar materials. Linear: nylon fiber, polyester,
+  HDPE — anything you can melt and re-form. Branched: LDPE plastic bags, glycogen — soft,
+  flexible, partly soluble. Cross-linked: vulcanized rubber, epoxy, the burnt residue on a
+  stainless pan, the seasoning on cast iron. None of those last ones can be melted. None
+  dissolve. The topology decides.
+</div>
+</section>
+
+<!-- =================== EXHIBIT 3 =================== -->
+<section class="exhibit" id="ex-solvent">
+<h2>3. Why Solubility Is a Topology Question</h2>
+<p>
+  "Soap dissolves grease" is mostly true — for grease that's still made of separate fatty-acid
+  molecules. Once those molecules cross-link into a network, the same soap fails. Watch why.
+</p>
+<canvas id="solvent-canvas" width="800" height="320" style="aspect-ratio: 800 / 320;"></canvas>
+<div class="controls">
+  <button id="solvent-add" class="primary">Add solvent</button>
+  <button id="solvent-reset">Reset</button>
+</div>
+<div class="takeaway">
+  Dissolving means surrounding a molecule with solvent until it floats free. That requires a
+  molecule small enough to be surrounded. A network has no edge — it's all one molecule, in the
+  limit, the size of the entire piece of material. There's nothing for the solvent to surround.
+  This is why oven cleaner (a strong base) works on burnt-on grease while soap doesn't: the base
+  doesn't <em>dissolve</em> the network, it <em>cuts the bonds</em>, breaking the network back
+  into pieces small enough to dissolve.
+</div>
+</section>
+
+<!-- =================== EXHIBIT 4 =================== -->
+<section class="exhibit" id="ex-saponification">
+<h2>4. Saponification: Cutting a Network Apart</h2>
+<p>
+  Strong base (sodium hydroxide, the active ingredient in oven cleaner) doesn't dissolve a polymer
+  network. It hydrolyzes specific bonds — the ester linkages that hold fatty-acid chains to the
+  glycerol backbone — and that's enough to fall the whole network apart. The pieces it produces
+  are literally soap.
+</p>
+<svg id="sapon-svg" class="demo" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid meet" style="aspect-ratio: 800 / 320;"></svg>
+<div class="controls">
+  <button id="sapon-add" class="primary">Add NaOH</button>
+  <button id="sapon-reset">Reset</button>
+</div>
+<div class="takeaway">
+  This is the cleaning trick: you don't need to dissolve the polymer, you need to cut a few
+  load-bearing bonds. Networks are held together by their connectivity, so a small number of
+  cuts at the right kind of bond breaks the topology and frees everything else to dissolve
+  normally. Same logic in biology: enzymes that nick DNA at single sites can release whole
+  loops.
+</div>
+</section>
+
+<!-- =================== EXHIBIT 5 =================== -->
+<section class="exhibit" id="ex-mechanical">
+<h2>5. Mechanical Bonds — Topology Without Chemistry</h2>
+<p>
+  These two molecules have no chemical bond holding them together. Their atoms aren't connected.
+  And yet they cannot be separated without breaking covalent bonds. The thing that holds them
+  together is purely topological — one is threaded through another.
+</p>
+<p>
+  This is the chemistry the 2016 Nobel Prize was awarded for: molecular machines built around
+  <em>mechanical bonds</em> — bonds whose existence is a fact about the bond graph's
+  topology, not about any single bond between atoms. Drag the parts. Try to separate them.
+</p>
+<svg id="mech-svg" class="demo" viewBox="0 0 800 280" preserveAspectRatio="xMidYMid meet" style="aspect-ratio: 800 / 280;"></svg>
+<div class="controls">
+  <button id="mech-toggle">Switch: rotaxane ↔ catenane</button>
+  <button id="mech-reset">Reset</button>
+  <span class="stat" id="mech-label">Rotaxane: ring threaded on dumbbell</span>
+</div>
+<div class="takeaway">
+  Rotaxane: a ring trapped on an axle by stopper groups too big to fit through. Catenane: two
+  rings threaded through each other. In both cases, the molecule's identity — what it is, how
+  it behaves — depends on a topological fact (something is threaded through something) rather
+  than a chemical one (which atoms are bonded). It's chemistry doing knot theory.
+</div>
+</section>
+
+<!-- =================== EXHIBIT 6 =================== -->
+<section class="exhibit" id="ex-invariants">
+<h2>6. What Survives Deformation</h2>
+<p>
+  The deep idea: topology studies properties that <em>don't change</em> when you stretch, bend,
+  or twist something — only when you cut or glue. A coffee mug and a donut have the same
+  topology (one hole each). A sphere and a donut don't.
+</p>
+<p>
+  For a polymer network, the analog is the <em>number of independent loops</em> in the bond
+  graph. Stretch the network, twist it, deform it — that number stays fixed. Add a cross-link,
+  and you've changed the topology. Cut a bond, same. The mechanical and thermal properties of
+  the material are tied to that count, not to the geometry.
+</p>
+<svg id="inv-svg" class="demo" viewBox="0 0 800 280" preserveAspectRatio="xMidYMid meet" style="aspect-ratio: 800 / 280;"></svg>
+<div class="controls">
+  <button id="inv-deform" class="primary">Deform</button>
+  <button id="inv-add">Add cross-link (changes topology)</button>
+  <button id="inv-reset">Reset</button>
+  <span class="stat">Independent loops: <strong id="inv-loops">0</strong></span>
+</div>
+<div class="takeaway">
+  This is why "polymerized oil" doesn't have a chemical formula — the formula is a compositional
+  description, and composition isn't the load-bearing variable here. The topological description
+  (number of cross-links per unit, distribution of loop sizes, branching density) is what
+  predicts whether the stuff is liquid, rubbery, glassy, or hard. Same logic shows up in
+  diamond vs graphite, in DNA supercoiling, in protein folding. The atoms tell you a story.
+  The graph tells you the answer.
+</div>
+</section>
+
+<footer class="page">
+<p>Built by <a href="https://bsky.app/profile/strix.timkellogg.me">Strix</a>. Companion to a chemistry conversation about
+why <a href="https://en.wikipedia.org/wiki/Bar_Keepers_Friend">Bar Keepers Friend</a> stops working on
+old stainless-pan residue. Source on <a href="https://github.com/tkellogg/strix-research">GitHub</a>.</p>
+</footer>
+
+</div>
+
+<script>
+"use strict";
+
+// =================================================================
+// EXHIBIT 1: Hero — same atoms, different topology
+// =================================================================
+(function hero() {
+  const svg = document.getElementById('hero-svg');
+  const NS = 'http://www.w3.org/2000/svg';
+  const W = 800, H = 360;
+
+  // Three triglycerides, each a glycerol backbone (3 C) with 3 fatty-acid tails.
+  // We model atoms as nodes with springs along the original bonds.
+  // "Polymerize" adds cross-links between fatty-acid tails of different molecules.
+
+  let atoms = [];
+  let bonds = [];   // original covalent
+  let cross = [];   // new cross-links
+  let polymerized = false;
+  let t = 0;
+
+  function makeTriglyceride(cx, cy) {
+    const start = atoms.length;
+    // Glycerol backbone: 3 carbons stacked
+    const b1 = { x: cx, y: cy - 30, type: 'C' };
+    const b2 = { x: cx, y: cy,      type: 'C' };
+    const b3 = { x: cx, y: cy + 30, type: 'C' };
+    // Three ester oxygens
+    const o1 = { x: cx + 16, y: cy - 30, type: 'O' };
+    const o2 = { x: cx + 16, y: cy,      type: 'O' };
+    const o3 = { x: cx + 16, y: cy + 30, type: 'O' };
+    atoms.push(b1, b2, b3, o1, o2, o3);
+    // backbone bonds
+    bonds.push([start, start+1], [start+1, start+2]);
+    // ester bonds C-O
+    bonds.push([start, start+3], [start+1, start+4], [start+2, start+5]);
+    // Three fatty-acid tails: each = 8-atom zigzag of carbons
+    const tailEnds = [];
+    for (let t = 0; t < 3; t++) {
+      const oIdx = start + 3 + t;
+      const oNode = atoms[oIdx];
+      let prev = oIdx;
+      let prevX = oNode.x, prevY = oNode.y;
+      for (let i = 0; i < 8; i++) {
+        const dx = 14;
+        const dy = (i % 2 === 0) ? -7 : 7;
+        const nx = prevX + dx, ny = prevY + dy;
+        const aIdx = atoms.length;
+        atoms.push({ x: nx, y: ny, type: 'C' });
+        bonds.push([prev, aIdx]);
+        prev = aIdx;
+        prevX = nx; prevY = ny;
+      }
+      tailEnds.push(prev);
+    }
+    return { startIdx: start, tailEnds };
+  }
+
+  function reset() {
+    atoms = []; bonds = []; cross = [];
+    polymerized = false;
+    document.getElementById('hero-toggle').textContent = 'Polymerize →';
+    const m1 = makeTriglyceride(170, 100);
+    const m2 = makeTriglyceride(170, 250);
+    const m3 = makeTriglyceride(490, 175);
+    document.getElementById('hero-atoms').textContent = atoms.length;
+    document.getElementById('hero-cross').textContent = '0';
+    window._heroMolecules = [m1, m2, m3];
+  }
+
+  function polymerize() {
+    if (polymerized) return;
+    const mols = window._heroMolecules;
+    // Add cross-links between tail ends of different molecules
+    cross.push([mols[0].tailEnds[0], mols[1].tailEnds[0]]);
+    cross.push([mols[0].tailEnds[1], mols[2].tailEnds[1]]);
+    cross.push([mols[1].tailEnds[1], mols[2].tailEnds[0]]);
+    cross.push([mols[0].tailEnds[2], mols[2].tailEnds[2]]);
+    cross.push([mols[1].tailEnds[2], mols[2].tailEnds[1]]);
+    polymerized = true;
+    document.getElementById('hero-toggle').textContent = '← Hydrolyze';
+    document.getElementById('hero-cross').textContent = cross.length;
+  }
+
+  function depolymerize() {
+    cross = [];
+    polymerized = false;
+    document.getElementById('hero-toggle').textContent = 'Polymerize →';
+    document.getElementById('hero-cross').textContent = '0';
+  }
+
+  function render() {
+    t += 0.02;
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    // bonds
+    for (const [i, j] of bonds) {
+      const a = atoms[i], b = atoms[j];
+      const ln = document.createElementNS(NS, 'line');
+      ln.setAttribute('x1', a.x); ln.setAttribute('y1', a.y);
+      ln.setAttribute('x2', b.x); ln.setAttribute('y2', b.y);
+      ln.setAttribute('stroke', '#6e7681');
+      ln.setAttribute('stroke-width', '2');
+      svg.appendChild(ln);
+    }
+    // cross-links (animated draw-in)
+    for (const [i, j] of cross) {
+      const a = atoms[i], b = atoms[j];
+      const ln = document.createElementNS(NS, 'line');
+      ln.setAttribute('x1', a.x); ln.setAttribute('y1', a.y);
+      ln.setAttribute('x2', b.x); ln.setAttribute('y2', b.y);
+      ln.setAttribute('stroke', '#58a6ff');
+      ln.setAttribute('stroke-width', '2.5');
+      ln.setAttribute('stroke-dasharray', '4 3');
+      svg.appendChild(ln);
+    }
+    // atoms
+    for (const a of atoms) {
+      const c = document.createElementNS(NS, 'circle');
+      const wob = polymerized ? 0 : Math.sin(t + a.x * 0.05) * 0.7;
+      c.setAttribute('cx', a.x + wob);
+      c.setAttribute('cy', a.y);
+      c.setAttribute('r', a.type === 'O' ? 3.5 : 3);
+      c.setAttribute('fill', a.type === 'O' ? '#f85149' : '#c9d1d9');
+      svg.appendChild(c);
+    }
+    requestAnimationFrame(render);
+  }
+
+  document.getElementById('hero-toggle').onclick = () => {
+    if (polymerized) depolymerize();
+    else polymerize();
+  };
+  document.getElementById('hero-reset').onclick = reset;
+
+  reset();
+  render();
+})();
+
+// =================================================================
+// Shared physics for chain canvases
+// =================================================================
+function makePhysicsCanvas(canvasId, builder) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  function fit() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  fit();
+  window.addEventListener('resize', fit);
+
+  const state = { nodes: [], springs: [], crossSprings: [], dragging: null, shake: 0, W: 0, H: 0, ctx };
+
+  function reset() {
+    state.nodes = [];
+    state.springs = [];
+    state.crossSprings = [];
+    const rect = canvas.getBoundingClientRect();
+    state.W = rect.width;
+    state.H = rect.height;
+    builder(state);
+  }
+
+  function step() {
+    const W = state.W, H = state.H;
+    // springs
+    for (const s of state.springs) {
+      const dx = s.b.x - s.a.x, dy = s.b.y - s.a.y;
+      const d = Math.sqrt(dx*dx + dy*dy) || 0.0001;
+      const f = s.k * (d - s.rest);
+      const fx = f * dx / d, fy = f * dy / d;
+      if (!s.a.fixed) { s.a.vx += fx; s.a.vy += fy; }
+      if (!s.b.fixed) { s.b.vx -= fx; s.b.vy -= fy; }
+    }
+    for (const s of state.crossSprings) {
+      const dx = s.b.x - s.a.x, dy = s.b.y - s.a.y;
+      const d = Math.sqrt(dx*dx + dy*dy) || 0.0001;
+      const f = s.k * (d - s.rest);
+      const fx = f * dx / d, fy = f * dy / d;
+      if (!s.a.fixed) { s.a.vx += fx; s.a.vy += fy; }
+      if (!s.b.fixed) { s.b.vx -= fx; s.b.vy -= fy; }
+    }
+    // thermal noise + shake
+    const noise = 0.18 + state.shake;
+    for (const n of state.nodes) {
+      n.vx += (Math.random() - 0.5) * noise;
+      n.vy += (Math.random() - 0.5) * noise;
+    }
+    state.shake *= 0.95;
+    // integrate
+    for (const n of state.nodes) {
+      if (n === state.dragging || n.fixed) { n.vx = 0; n.vy = 0; continue; }
+      n.vx *= 0.86; n.vy *= 0.86;
+      n.x += n.vx; n.y += n.vy;
+      const r = 4;
+      if (n.x < r) { n.x = r; n.vx *= -0.4; }
+      if (n.x > W - r) { n.x = W - r; n.vx *= -0.4; }
+      if (n.y < r) { n.y = r; n.vy *= -0.4; }
+      if (n.y > H - r) { n.y = H - r; n.vy *= -0.4; }
+    }
+  }
+
+  function draw() {
+    const W = state.W, H = state.H;
+    ctx.clearRect(0, 0, W, H);
+    // backbone springs
+    ctx.strokeStyle = '#6e7681';
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    for (const s of state.springs) {
+      ctx.moveTo(s.a.x, s.a.y);
+      ctx.lineTo(s.b.x, s.b.y);
+    }
+    ctx.stroke();
+    // cross-links
+    ctx.strokeStyle = '#58a6ff';
+    ctx.lineWidth = 1.6;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    for (const s of state.crossSprings) {
+      ctx.moveTo(s.a.x, s.a.y);
+      ctx.lineTo(s.b.x, s.b.y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // nodes
+    for (const n of state.nodes) {
+      ctx.fillStyle = n.color || '#c9d1d9';
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r || 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function loop() {
+    for (let i = 0; i < 2; i++) step();
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  function getMouse(e) {
+    const rect = canvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+  }
+  function onDown(e) {
+    e.preventDefault();
+    const p = getMouse(e);
+    let nearest = null, minD = Infinity;
+    for (const n of state.nodes) {
+      const d = (n.x - p.x) ** 2 + (n.y - p.y) ** 2;
+      if (d < minD) { minD = d; nearest = n; }
+    }
+    if (nearest && minD < 600) state.dragging = nearest;
+  }
+  function onMove(e) {
+    if (!state.dragging) return;
+    e.preventDefault();
+    const p = getMouse(e);
+    state.dragging.x = p.x;
+    state.dragging.y = p.y;
+  }
+  function onUp() { state.dragging = null; }
+  canvas.addEventListener('mousedown', onDown);
+  canvas.addEventListener('mousemove', onMove);
+  canvas.addEventListener('mouseup', onUp);
+  canvas.addEventListener('mouseleave', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive: false });
+  canvas.addEventListener('touchmove', onMove, { passive: false });
+  canvas.addEventListener('touchend', onUp);
+
+  reset();
+  loop();
+  return { reset, shake: () => { state.shake = 1.5; }, state };
+}
+
+// =================================================================
+// EXHIBIT 2: Three topologies
+// =================================================================
+function buildChain(state, x0, y0, dx, dy, n, springK = 0.35, restLen = 12) {
+  const chain = [];
+  for (let i = 0; i < n; i++) {
+    const node = { x: x0 + i * dx, y: y0 + i * dy, vx: 0, vy: 0, r: 3 };
+    state.nodes.push(node);
+    chain.push(node);
+    if (i > 0) state.springs.push({ a: chain[i - 1], b: node, rest: restLen, k: springK });
+  }
+  return chain;
+}
+
+const linearSim = makePhysicsCanvas('topo-linear', (state) => {
+  const W = state.W, H = state.H;
+  for (let c = 0; c < 4; c++) {
+    const x0 = 20 + c * (W - 40) / 3;
+    buildChain(state, x0, 30 + Math.random() * 10, -3, 12, 14);
+  }
+});
+
+const branchedSim = makePhysicsCanvas('topo-branched', (state) => {
+  const W = state.W, H = state.H;
+  for (let c = 0; c < 3; c++) {
+    const x0 = 30 + c * (W - 60) / 2;
+    const main = buildChain(state, x0, 25, 2, 13, 14);
+    // sprout 2-3 branches from random main nodes
+    for (let b = 0; b < 3; b++) {
+      const idx = 2 + Math.floor(Math.random() * (main.length - 4));
+      const root = main[idx];
+      const dir = Math.random() < 0.5 ? -1 : 1;
+      const branch = [];
+      for (let i = 0; i < 4; i++) {
+        const node = {
+          x: root.x + dir * (i + 1) * 9,
+          y: root.y + (i + 1) * 4,
+          vx: 0, vy: 0, r: 3
+        };
+        state.nodes.push(node);
+        branch.push(node);
+        if (i === 0) state.springs.push({ a: root, b: node, rest: 12, k: 0.35 });
+        else state.springs.push({ a: branch[i - 1], b: node, rest: 12, k: 0.35 });
+      }
+    }
+  }
+});
+
+const networkSim = makePhysicsCanvas('topo-network', (state) => {
+  const W = state.W, H = state.H;
+  const chains = [];
+  for (let c = 0; c < 5; c++) {
+    const x0 = 25 + c * (W - 50) / 4;
+    chains.push(buildChain(state, x0, 25, 0, 13, 14, 0.35, 11));
+  }
+  // cross-link adjacent chains at multiple heights
+  for (let i = 0; i < chains.length - 1; i++) {
+    for (const h of [3, 7, 11]) {
+      state.crossSprings.push({
+        a: chains[i][h], b: chains[i + 1][h],
+        rest: (W - 50) / 4, k: 0.18
+      });
+    }
+  }
+});
+
+document.getElementById('topo-shake').onclick = () => {
+  linearSim.shake();
+  branchedSim.shake();
+  networkSim.shake();
+};
+document.getElementById('topo-reset').onclick = () => {
+  linearSim.reset();
+  branchedSim.reset();
+  networkSim.reset();
+};
+
+// =================================================================
+// EXHIBIT 3: Solvent test
+// =================================================================
+(function solvent() {
+  const canvas = document.getElementById('solvent-canvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  function fit() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  fit();
+  window.addEventListener('resize', fit);
+
+  let nodes, springs, crossSprings, solvent, mode = 'idle';
+
+  function build() {
+    const rect = canvas.getBoundingClientRect();
+    const W = rect.width, H = rect.height;
+    nodes = []; springs = []; crossSprings = []; solvent = [];
+
+    // Three regions: linear (left), branched (middle), network (right)
+    const colW = W / 3;
+
+    // LINEAR
+    for (let c = 0; c < 5; c++) {
+      const chain = [];
+      const baseX = 30 + Math.random() * (colW - 80);
+      for (let i = 0; i < 8; i++) {
+        const node = {
+          x: baseX + i * 8,
+          y: 50 + c * 35 + (i % 2 === 0 ? -3 : 3),
+          vx: 0, vy: 0, type: 'linear', dispersing: false
+        };
+        nodes.push(node); chain.push(node);
+        if (i > 0) springs.push({ a: chain[i - 1], b: node, rest: 9, k: 0.4 });
+      }
+    }
+
+    // BRANCHED
+    for (let c = 0; c < 4; c++) {
+      const chain = [];
+      const baseX = colW + 30 + Math.random() * (colW - 80);
+      for (let i = 0; i < 8; i++) {
+        const node = {
+          x: baseX + i * 7,
+          y: 50 + c * 45 + (i % 2 === 0 ? -3 : 3),
+          vx: 0, vy: 0, type: 'branched', dispersing: false
+        };
+        nodes.push(node); chain.push(node);
+        if (i > 0) springs.push({ a: chain[i - 1], b: node, rest: 9, k: 0.4 });
+      }
+      // 2 branches per chain
+      for (let b = 0; b < 2; b++) {
+        const idx = 2 + Math.floor(Math.random() * 4);
+        const root = chain[idx];
+        let prev = root;
+        for (let i = 0; i < 3; i++) {
+          const node = {
+            x: prev.x + 4,
+            y: prev.y + 6 + i * 4,
+            vx: 0, vy: 0, type: 'branched', dispersing: false
+          };
+          nodes.push(node);
+          springs.push({ a: prev, b: node, rest: 8, k: 0.4 });
+          prev = node;
+        }
+      }
+    }
+
+    // NETWORK
+    const chains = [];
+    for (let c = 0; c < 6; c++) {
+      const chain = [];
+      const baseX = 2 * colW + 30;
+      for (let i = 0; i < 6; i++) {
+        const node = {
+          x: baseX + i * (colW - 60) / 5,
+          y: 40 + c * 38,
+          vx: 0, vy: 0, type: 'network', dispersing: false
+        };
+        nodes.push(node); chain.push(node);
+        if (i > 0) springs.push({ a: chain[i - 1], b: node, rest: (colW - 60) / 5, k: 0.4 });
+      }
+      chains.push(chain);
+    }
+    for (let i = 0; i < chains.length - 1; i++) {
+      for (let j = 0; j < chains[i].length; j += 2) {
+        crossSprings.push({ a: chains[i][j], b: chains[i + 1][j], rest: 38, k: 0.3 });
+      }
+    }
+
+    // Column dividers (drawn separately)
+  }
+
+  function step() {
+    const rect = canvas.getBoundingClientRect();
+    const W = rect.width, H = rect.height;
+    for (const s of springs) {
+      const dx = s.b.x - s.a.x, dy = s.b.y - s.a.y;
+      const d = Math.sqrt(dx*dx + dy*dy) || 0.0001;
+      const f = s.k * (d - s.rest);
+      const fx = f * dx / d, fy = f * dy / d;
+      s.a.vx += fx; s.a.vy += fy;
+      s.b.vx -= fx; s.b.vy -= fy;
+    }
+    for (const s of crossSprings) {
+      const dx = s.b.x - s.a.x, dy = s.b.y - s.a.y;
+      const d = Math.sqrt(dx*dx + dy*dy) || 0.0001;
+      const f = s.k * (d - s.rest);
+      const fx = f * dx / d, fy = f * dy / d;
+      s.a.vx += fx; s.a.vy += fy;
+      s.b.vx -= fx; s.b.vy -= fy;
+    }
+    for (const n of nodes) {
+      // dispersing forces
+      if (n.dispersing) {
+        n.vx += (Math.random() - 0.5) * 0.6 + n.driftX;
+        n.vy += (Math.random() - 0.5) * 0.6;
+      } else {
+        n.vx += (Math.random() - 0.5) * 0.15;
+        n.vy += (Math.random() - 0.5) * 0.15;
+      }
+      n.vx *= 0.9; n.vy *= 0.9;
+      n.x += n.vx; n.y += n.vy;
+      // walls (allow disperse off-screen)
+      if (!n.dispersing) {
+        if (n.x < 4) { n.x = 4; n.vx *= -0.3; }
+        if (n.x > W - 4) { n.x = W - 4; n.vx *= -0.3; }
+        if (n.y < 4) { n.y = 4; n.vy *= -0.3; }
+        if (n.y > H - 4) { n.y = H - 4; n.vy *= -0.3; }
+      }
+    }
+    for (const p of solvent) {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx += (Math.random() - 0.5) * 0.05;
+      p.vy += (Math.random() - 0.5) * 0.05;
+      p.vx *= 0.97; p.vy *= 0.97;
+      if (p.x < 0) p.x += W;
+      if (p.x > W) p.x -= W;
+      if (p.y < 0) p.y += H;
+      if (p.y > H) p.y -= H;
+    }
+  }
+
+  function draw() {
+    const rect = canvas.getBoundingClientRect();
+    const W = rect.width, H = rect.height;
+    ctx.clearRect(0, 0, W, H);
+
+    // column labels
+    ctx.fillStyle = '#8b949e';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Linear (chains)', W / 6, 16);
+    ctx.fillText('Branched', W / 2, 16);
+    ctx.fillText('Cross-linked network', 5 * W / 6, 16);
+
+    // dividers
+    ctx.strokeStyle = '#30363d';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(W / 3, 24); ctx.lineTo(W / 3, H);
+    ctx.moveTo(2 * W / 3, 24); ctx.lineTo(2 * W / 3, H);
+    ctx.stroke();
+
+    // solvent
+    ctx.fillStyle = 'rgba(88, 166, 255, 0.55)';
+    for (const p of solvent) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // bonds
+    ctx.strokeStyle = '#6e7681';
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    for (const s of springs) {
+      ctx.moveTo(s.a.x, s.a.y);
+      ctx.lineTo(s.b.x, s.b.y);
+    }
+    ctx.stroke();
+    ctx.strokeStyle = '#58a6ff';
+    ctx.beginPath();
+    for (const s of crossSprings) {
+      ctx.moveTo(s.a.x, s.a.y);
+      ctx.lineTo(s.b.x, s.b.y);
+    }
+    ctx.stroke();
+
+    // nodes
+    for (const n of nodes) {
+      ctx.fillStyle = '#c9d1d9';
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function loop() {
+    step();
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  document.getElementById('solvent-add').onclick = () => {
+    const rect = canvas.getBoundingClientRect();
+    const W = rect.width, H = rect.height;
+    if (solvent.length === 0) {
+      for (let i = 0; i < 220; i++) {
+        solvent.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5
+        });
+      }
+    }
+    // Mark nodes for dispersal based on type
+    for (const n of nodes) {
+      if (n.type === 'linear') {
+        n.dispersing = true;
+        n.driftX = -1.2 + (Math.random() - 0.5) * 0.4;
+      } else if (n.type === 'branched') {
+        if (Math.random() < 0.5) {
+          n.dispersing = true;
+          n.driftX = (Math.random() - 0.5) * 0.4;
+        }
+      }
+      // network: never dispersing
+    }
+  };
+  document.getElementById('solvent-reset').onclick = () => {
+    build();
+    solvent = [];
+  };
+
+  build();
+  loop();
+})();
+
+// =================================================================
+// EXHIBIT 4: Saponification
+// =================================================================
+(function sapon() {
+  const svg = document.getElementById('sapon-svg');
+  const NS = 'http://www.w3.org/2000/svg';
+  const W = 800, H = 320;
+  let state = 'intact'; // intact -> attacking -> broken
+  let t = 0;
+
+  // Build a simple network of three chains held together by ester bonds (red).
+  // NaOH attacks the ester bonds. Once cut, the pieces drift apart.
+
+  let chains = [];
+  let esterBonds = [];  // ester linkages (can be cut)
+  let cutBonds = new Set();
+  let drifts = {};  // node id -> {vx, vy}
+
+  function reset() {
+    state = 'intact';
+    chains = [];
+    esterBonds = [];
+    cutBonds = new Set();
+    drifts = {};
+    document.getElementById('sapon-add').disabled = false;
+    // Three horizontal chains stacked vertically
+    let nextId = 0;
+    for (let c = 0; c < 3; c++) {
+      const chain = [];
+      const y = 80 + c * 80;
+      for (let i = 0; i < 14; i++) {
+        chain.push({ id: nextId++, x: 80 + i * 45, y: y + (i % 2 === 0 ? -6 : 6), atom: 'C' });
+      }
+      chains.push(chain);
+    }
+    // Insert "ester bridges" between adjacent chains: each bridge is two C-O-C bonds
+    // We'll represent as: between (chain[c][i]) and (chain[c+1][i]), inserting a virtual O
+    for (let c = 0; c < chains.length - 1; c++) {
+      for (const idx of [3, 7, 11]) {
+        const a = chains[c][idx];
+        const b = chains[c + 1][idx];
+        const o = { id: 'O' + c + '-' + idx, x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, atom: 'O' };
+        esterBonds.push({ a, o, b, idx, c });
+      }
+    }
+  }
+
+  function attack() {
+    if (state !== 'intact') return;
+    state = 'attacking';
+    document.getElementById('sapon-add').disabled = true;
+    let i = 0;
+    const total = esterBonds.length;
+    function cutNext() {
+      if (i >= total) {
+        state = 'broken';
+        // Assign drift to each chain based on its position
+        for (let ci = 0; ci < chains.length; ci++) {
+          const driftX = (Math.random() - 0.5) * 0.4;
+          const driftY = (ci - 1) * 0.5;
+          for (const node of chains[ci]) {
+            drifts[node.id] = { vx: driftX, vy: driftY };
+          }
+        }
+        return;
+      }
+      cutBonds.add(i);
+      i++;
+      setTimeout(cutNext, 280);
+    }
+    cutNext();
+  }
+
+  function render() {
+    t += 0.02;
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    // If broken, drift the chains apart
+    if (state === 'broken') {
+      for (const chain of chains) {
+        for (const node of chain) {
+          const d = drifts[node.id];
+          if (d) {
+            node.x += d.vx;
+            node.y += d.vy;
+          }
+        }
+      }
+    }
+
+    // Chain backbone bonds
+    for (const chain of chains) {
+      for (let i = 1; i < chain.length; i++) {
+        const a = chain[i - 1], b = chain[i];
+        const ln = document.createElementNS(NS, 'line');
+        ln.setAttribute('x1', a.x); ln.setAttribute('y1', a.y);
+        ln.setAttribute('x2', b.x); ln.setAttribute('y2', b.y);
+        ln.setAttribute('stroke', '#6e7681');
+        ln.setAttribute('stroke-width', '2');
+        svg.appendChild(ln);
+      }
+    }
+
+    // Ester linkages
+    for (let i = 0; i < esterBonds.length; i++) {
+      const eb = esterBonds[i];
+      const cut = cutBonds.has(i);
+      if (cut) {
+        // After cut, only show the "O" atom drifting with one chain
+        // Suppress drawing the bridge
+        continue;
+      }
+      // a -> o
+      const ln1 = document.createElementNS(NS, 'line');
+      ln1.setAttribute('x1', eb.a.x); ln1.setAttribute('y1', eb.a.y);
+      ln1.setAttribute('x2', eb.o.x); ln1.setAttribute('y2', eb.o.y);
+      ln1.setAttribute('stroke', '#f85149');
+      ln1.setAttribute('stroke-width', '2.4');
+      svg.appendChild(ln1);
+      // o -> b
+      const ln2 = document.createElementNS(NS, 'line');
+      ln2.setAttribute('x1', eb.o.x); ln2.setAttribute('y1', eb.o.y);
+      ln2.setAttribute('x2', eb.b.x); ln2.setAttribute('y2', eb.b.y);
+      ln2.setAttribute('stroke', '#f85149');
+      ln2.setAttribute('stroke-width', '2.4');
+      svg.appendChild(ln2);
+      // O atom
+      const oc = document.createElementNS(NS, 'circle');
+      oc.setAttribute('cx', eb.o.x);
+      oc.setAttribute('cy', eb.o.y);
+      oc.setAttribute('r', '3.5');
+      oc.setAttribute('fill', '#f85149');
+      svg.appendChild(oc);
+    }
+
+    // Carbon atoms
+    for (const chain of chains) {
+      for (const node of chain) {
+        const c = document.createElementNS(NS, 'circle');
+        c.setAttribute('cx', node.x);
+        c.setAttribute('cy', node.y);
+        c.setAttribute('r', '3');
+        c.setAttribute('fill', '#c9d1d9');
+        svg.appendChild(c);
+      }
+    }
+
+    // NaOH attack indicators (yellow flashes near currently-cut bonds during attack)
+    if (state === 'attacking') {
+      const i = cutBonds.size - 1;
+      if (i >= 0 && i < esterBonds.length) {
+        const eb = esterBonds[i];
+        const flash = document.createElementNS(NS, 'circle');
+        flash.setAttribute('cx', eb.o.x);
+        flash.setAttribute('cy', eb.o.y);
+        flash.setAttribute('r', 12 + Math.sin(t * 8) * 4);
+        flash.setAttribute('fill', 'none');
+        flash.setAttribute('stroke', '#d29922');
+        flash.setAttribute('stroke-width', '2');
+        flash.setAttribute('opacity', '0.7');
+        svg.appendChild(flash);
+      }
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  document.getElementById('sapon-add').onclick = attack;
+  document.getElementById('sapon-reset').onclick = reset;
+
+  reset();
+  render();
+})();
+
+// =================================================================
+// EXHIBIT 5: Mechanical bonds — rotaxane / catenane
+// =================================================================
+(function mechanical() {
+  const svg = document.getElementById('mech-svg');
+  const NS = 'http://www.w3.org/2000/svg';
+  const W = 800, H = 280;
+  let mode = 'rotaxane';
+
+  // Rotaxane: a thick "axle" line from x=120 to x=680, with stopper circles at ends.
+  // A "ring" is an ellipse positioned along the axle. User drags it; it slides along x
+  // but cannot leave the axle endpoints (stoppers).
+
+  // Catenane: two interlocking rings. Each ring has a center; the user drags either ring
+  // but a constraint keeps them linked: they must remain positioned such that one passes
+  // through the other.
+
+  let rotax = { ringX: 400, ringY: H / 2, dragging: false };
+  let cate = {
+    ringA: { x: W / 2 - 60, y: H / 2, radius: 70, angle: 0 },
+    ringB: { x: W / 2 + 60, y: H / 2, radius: 70, angle: 0 },
+    dragging: null,
+    offX: 0, offY: 0
+  };
+
+  function getMouse(e) {
+    const rect = svg.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    const sx = (t.clientX - rect.left) * W / rect.width;
+    const sy = (t.clientY - rect.top) * H / rect.height;
+    return { x: sx, y: sy };
+  }
+
+  function render() {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    if (mode === 'rotaxane') {
+      // Axle
+      const axle = document.createElementNS(NS, 'line');
+      axle.setAttribute('x1', 120);
+      axle.setAttribute('y1', H / 2);
+      axle.setAttribute('x2', 680);
+      axle.setAttribute('y2', H / 2);
+      axle.setAttribute('stroke', '#6e7681');
+      axle.setAttribute('stroke-width', '6');
+      axle.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(axle);
+      // Stoppers
+      for (const x of [120, 680]) {
+        const s = document.createElementNS(NS, 'circle');
+        s.setAttribute('cx', x);
+        s.setAttribute('cy', H / 2);
+        s.setAttribute('r', 28);
+        s.setAttribute('fill', '#d29922');
+        s.setAttribute('stroke', '#a37411');
+        s.setAttribute('stroke-width', '2');
+        svg.appendChild(s);
+      }
+      // Ring (ellipse seen edge-on)
+      const ring = document.createElementNS(NS, 'ellipse');
+      ring.setAttribute('cx', rotax.ringX);
+      ring.setAttribute('cy', H / 2);
+      ring.setAttribute('rx', 18);
+      ring.setAttribute('ry', 42);
+      ring.setAttribute('fill', 'none');
+      ring.setAttribute('stroke', '#58a6ff');
+      ring.setAttribute('stroke-width', '7');
+      ring.setAttribute('style', 'cursor: grab');
+      svg.appendChild(ring);
+
+      // labels
+      const t1 = document.createElementNS(NS, 'text');
+      t1.setAttribute('x', 400);
+      t1.setAttribute('y', 40);
+      t1.setAttribute('fill', '#8b949e');
+      t1.setAttribute('font-size', '13');
+      t1.setAttribute('text-anchor', 'middle');
+      t1.textContent = 'Drag the blue ring along the axle. The orange stoppers won\'t let it escape.';
+      svg.appendChild(t1);
+    } else {
+      // Catenane: two rings interlocking
+      // Draw ring A as full circle (back half), then crossing band, then ring B (front)
+      // Use stroke-dasharray trick: split each ring into "front" and "back" arcs.
+
+      drawLinkedRings();
+
+      const t1 = document.createElementNS(NS, 'text');
+      t1.setAttribute('x', 400);
+      t1.setAttribute('y', 40);
+      t1.setAttribute('fill', '#8b949e');
+      t1.setAttribute('font-size', '13');
+      t1.setAttribute('text-anchor', 'middle');
+      t1.textContent = 'Drag either ring. They\'re threaded through each other — separating them would require breaking a bond.';
+      svg.appendChild(t1);
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  function drawLinkedRings() {
+    // Constrain rings so they're always linked: distance between centers stays
+    // close to the radius, with one passing through the other.
+    const A = cate.ringA, B = cate.ringB;
+    // Force separation toward target distance ~ ring radius
+    const dx = B.x - A.x, dy = B.y - A.y;
+    const d = Math.sqrt(dx*dx + dy*dy);
+    const target = A.radius * 1.2;
+    if (d > 0) {
+      const correction = (d - target) * 0.05;
+      const cx = correction * dx / d, cy = correction * dy / d;
+      if (cate.dragging !== A) { A.x += cx; A.y += cy; }
+      if (cate.dragging !== B) { B.x -= cx; B.y -= cy; }
+    }
+    // keep in bounds
+    for (const r of [A, B]) {
+      r.x = Math.max(r.radius + 10, Math.min(W - r.radius - 10, r.x));
+      r.y = Math.max(r.radius + 30, Math.min(H - r.radius - 10, r.y));
+    }
+
+    // Draw with z-order to suggest interlock:
+    // Ring A back-half (bottom), Ring B (full, blue), Ring A front-half (orange) over B.
+    const aBack = document.createElementNS(NS, 'path');
+    aBack.setAttribute('d', `M ${A.x - A.radius} ${A.y} A ${A.radius} ${A.radius} 0 0 1 ${A.x + A.radius} ${A.y}`);
+    aBack.setAttribute('fill', 'none');
+    aBack.setAttribute('stroke', '#d29922');
+    aBack.setAttribute('stroke-width', '8');
+    aBack.setAttribute('opacity', '0.5');
+    svg.appendChild(aBack);
+
+    const bFull = document.createElementNS(NS, 'circle');
+    bFull.setAttribute('cx', B.x);
+    bFull.setAttribute('cy', B.y);
+    bFull.setAttribute('r', B.radius);
+    bFull.setAttribute('fill', 'none');
+    bFull.setAttribute('stroke', '#58a6ff');
+    bFull.setAttribute('stroke-width', '8');
+    bFull.setAttribute('style', 'cursor: grab');
+    bFull.dataset.ring = 'B';
+    svg.appendChild(bFull);
+
+    const aFront = document.createElementNS(NS, 'path');
+    aFront.setAttribute('d', `M ${A.x + A.radius} ${A.y} A ${A.radius} ${A.radius} 0 0 1 ${A.x - A.radius} ${A.y}`);
+    aFront.setAttribute('fill', 'none');
+    aFront.setAttribute('stroke', '#d29922');
+    aFront.setAttribute('stroke-width', '8');
+    aFront.setAttribute('style', 'cursor: grab');
+    aFront.dataset.ring = 'A';
+    svg.appendChild(aFront);
+
+    // invisible hit targets for full rings
+    const aHit = document.createElementNS(NS, 'circle');
+    aHit.setAttribute('cx', A.x);
+    aHit.setAttribute('cy', A.y);
+    aHit.setAttribute('r', A.radius);
+    aHit.setAttribute('fill', 'none');
+    aHit.setAttribute('stroke', 'transparent');
+    aHit.setAttribute('stroke-width', '20');
+    aHit.setAttribute('pointer-events', 'stroke');
+    aHit.dataset.ring = 'A';
+    aHit.setAttribute('style', 'cursor: grab');
+    svg.appendChild(aHit);
+  }
+
+  function onDown(e) {
+    e.preventDefault();
+    const p = getMouse(e);
+    if (mode === 'rotaxane') {
+      const dx = p.x - rotax.ringX, dy = p.y - H / 2;
+      if (Math.abs(dx) < 25 && Math.abs(dy) < 50) rotax.dragging = true;
+    } else {
+      // determine which ring is closer to mouse (along the ring perimeter)
+      const distToRing = (r) => {
+        const d = Math.sqrt((p.x - r.x) ** 2 + (p.y - r.y) ** 2);
+        return Math.abs(d - r.radius);
+      };
+      const dA = distToRing(cate.ringA);
+      const dB = distToRing(cate.ringB);
+      if (Math.min(dA, dB) < 25) {
+        const target = dA < dB ? cate.ringA : cate.ringB;
+        cate.dragging = target;
+        cate.offX = target.x - p.x;
+        cate.offY = target.y - p.y;
+      }
+    }
+  }
+
+  function onMove(e) {
+    const p = getMouse(e);
+    if (mode === 'rotaxane' && rotax.dragging) {
+      e.preventDefault();
+      // Constrain to axle range
+      rotax.ringX = Math.max(160, Math.min(640, p.x));
+    } else if (mode === 'catenane' && cate.dragging) {
+      e.preventDefault();
+      cate.dragging.x = p.x + cate.offX;
+      cate.dragging.y = p.y + cate.offY;
+    }
+  }
+
+  function onUp() {
+    rotax.dragging = false;
+    cate.dragging = null;
+  }
+
+  svg.addEventListener('mousedown', onDown);
+  svg.addEventListener('mousemove', onMove);
+  svg.addEventListener('mouseup', onUp);
+  svg.addEventListener('mouseleave', onUp);
+  svg.addEventListener('touchstart', onDown, { passive: false });
+  svg.addEventListener('touchmove', onMove, { passive: false });
+  svg.addEventListener('touchend', onUp);
+
+  document.getElementById('mech-toggle').onclick = () => {
+    mode = mode === 'rotaxane' ? 'catenane' : 'rotaxane';
+    document.getElementById('mech-label').textContent = mode === 'rotaxane'
+      ? 'Rotaxane: ring threaded on dumbbell'
+      : 'Catenane: two interlocking rings';
+  };
+  document.getElementById('mech-reset').onclick = () => {
+    rotax = { ringX: 400, ringY: H / 2, dragging: false };
+    cate = {
+      ringA: { x: W / 2 - 60, y: H / 2, radius: 70, angle: 0 },
+      ringB: { x: W / 2 + 60, y: H / 2, radius: 70, angle: 0 },
+      dragging: null, offX: 0, offY: 0
+    };
+  };
+
+  render();
+})();
+
+// =================================================================
+// EXHIBIT 6: Topological invariants
+// =================================================================
+(function invariants() {
+  const svg = document.getElementById('inv-svg');
+  const NS = 'http://www.w3.org/2000/svg';
+  const W = 800, H = 280;
+  let nodes = [];
+  let bonds = [];  // [i, j]
+  let crossLinks = [];  // additional bonds that create loops
+  let deformPhase = 0;
+  let deforming = false;
+
+  function reset() {
+    nodes = [];
+    bonds = [];
+    crossLinks = [];
+    deformPhase = 0;
+    deforming = false;
+    // Build a 6x4 grid of nodes
+    const cols = 8, rows = 4;
+    const xPad = 80, yPad = 60;
+    const xStep = (W - 2 * xPad) / (cols - 1);
+    const yStep = (H - 2 * yPad) / (rows - 1);
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        nodes.push({
+          x: xPad + c * xStep,
+          y: yPad + r * yStep,
+          x0: xPad + c * xStep,
+          y0: yPad + r * yStep,
+          r, c
+        });
+      }
+    }
+    // Connect into chains (horizontal lines only initially → tree, no loops)
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols - 1; c++) {
+        bonds.push([r * cols + c, r * cols + c + 1]);
+      }
+    }
+    // One vertical bond connecting all chains into one tree (still 0 loops)
+    for (let r = 0; r < rows - 1; r++) {
+      bonds.push([r * cols, (r + 1) * cols]);
+    }
+    updateLoops();
+  }
+
+  function updateLoops() {
+    // Number of independent loops = E - V + C, where C = connected components
+    // For a connected graph: loops = E - V + 1
+    const allBonds = bonds.length + crossLinks.length;
+    // Compute connected components via BFS
+    const adj = Array.from({ length: nodes.length }, () => []);
+    for (const [i, j] of bonds) { adj[i].push(j); adj[j].push(i); }
+    for (const [i, j] of crossLinks) { adj[i].push(j); adj[j].push(i); }
+    const visited = new Array(nodes.length).fill(false);
+    let components = 0;
+    for (let start = 0; start < nodes.length; start++) {
+      if (visited[start]) continue;
+      components++;
+      const queue = [start];
+      visited[start] = true;
+      while (queue.length) {
+        const v = queue.shift();
+        for (const u of adj[v]) {
+          if (!visited[u]) { visited[u] = true; queue.push(u); }
+        }
+      }
+    }
+    const loops = allBonds - nodes.length + components;
+    document.getElementById('inv-loops').textContent = loops;
+  }
+
+  function render() {
+    if (deforming) {
+      deformPhase += 0.025;
+      // wave deformation: each node displaces along sin
+      for (const n of nodes) {
+        const phase = n.c * 0.4 + n.r * 0.5;
+        const amp = 14;
+        n.x = n.x0 + Math.sin(deformPhase + phase) * amp;
+        n.y = n.y0 + Math.cos(deformPhase * 0.7 + phase) * amp * 0.6;
+      }
+    }
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    // bonds
+    for (const [i, j] of bonds) {
+      const a = nodes[i], b = nodes[j];
+      const ln = document.createElementNS(NS, 'line');
+      ln.setAttribute('x1', a.x); ln.setAttribute('y1', a.y);
+      ln.setAttribute('x2', b.x); ln.setAttribute('y2', b.y);
+      ln.setAttribute('stroke', '#6e7681');
+      ln.setAttribute('stroke-width', '2');
+      svg.appendChild(ln);
+    }
+    for (const [i, j] of crossLinks) {
+      const a = nodes[i], b = nodes[j];
+      const ln = document.createElementNS(NS, 'line');
+      ln.setAttribute('x1', a.x); ln.setAttribute('y1', a.y);
+      ln.setAttribute('x2', b.x); ln.setAttribute('y2', b.y);
+      ln.setAttribute('stroke', '#58a6ff');
+      ln.setAttribute('stroke-width', '2.4');
+      svg.appendChild(ln);
+    }
+    // nodes
+    for (const n of nodes) {
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('cx', n.x);
+      c.setAttribute('cy', n.y);
+      c.setAttribute('r', '3.2');
+      c.setAttribute('fill', '#c9d1d9');
+      svg.appendChild(c);
+    }
+    requestAnimationFrame(render);
+  }
+
+  document.getElementById('inv-deform').onclick = () => {
+    deforming = !deforming;
+    if (!deforming) {
+      // snap back
+      for (const n of nodes) { n.x = n.x0; n.y = n.y0; }
+    }
+  };
+  document.getElementById('inv-add').onclick = () => {
+    // Add a random cross-link between distant nodes (creates a loop)
+    const cols = 8;
+    const rows = 4;
+    let attempts = 0;
+    while (attempts < 50) {
+      const i = Math.floor(Math.random() * nodes.length);
+      const j = Math.floor(Math.random() * nodes.length);
+      if (i === j) { attempts++; continue; }
+      // Don't duplicate
+      const dup = bonds.some(([a, b]) => (a === i && b === j) || (a === j && b === i)) ||
+                  crossLinks.some(([a, b]) => (a === i && b === j) || (a === j && b === i));
+      if (dup) { attempts++; continue; }
+      const ni = nodes[i], nj = nodes[j];
+      // require some distance for visual interest
+      const d = Math.hypot(ni.x0 - nj.x0, ni.y0 - nj.y0);
+      if (d < 100) { attempts++; continue; }
+      crossLinks.push([i, j]);
+      updateLoops();
+      return;
+    }
+  };
+  document.getElementById('inv-reset').onclick = reset;
+
+  reset();
+  render();
+})();
+</script>
+</body>
+</html>
