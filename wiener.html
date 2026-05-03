@@ -146,6 +146,102 @@ title: The Human Use of Human Beings — A Walkthrough
     font-size: 0.95rem;
   }
   .lineage-info .who { color: var(--accent); font-weight: 600; }
+  .lineage-info .more {
+    display: inline-block; margin-top: 0.6rem;
+    color: var(--accent); cursor: pointer;
+    border: 1px solid var(--accent); padding: 0.3rem 0.7rem;
+    border-radius: 4px; font-size: 0.88rem;
+  }
+  .lineage-info .more:hover { background: rgba(210, 153, 34, 0.1); }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    display: none; align-items: flex-start; justify-content: center;
+    z-index: 100; padding: 2rem 1rem; overflow-y: auto;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: var(--panel); border: 1px solid var(--accent);
+    border-radius: 8px; max-width: 760px; width: 100%;
+    padding: 1.6rem 1.8rem; position: relative;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .modal h2 { margin-top: 0; color: var(--accent); font-size: 1.4rem; }
+  .modal .dates { color: var(--dim); font-size: 0.9rem; margin: -0.3rem 0 1rem; }
+  .modal h3 {
+    color: var(--heading); font-size: 1rem; margin: 1.3rem 0 0.4rem;
+    text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600;
+  }
+  .modal h3:first-of-type { margin-top: 0.6rem; }
+  .modal p { font-size: 0.97rem; }
+  .modal .hedge {
+    background: rgba(248, 81, 73, 0.07);
+    border-left: 3px solid var(--hot);
+    padding: 0.7rem 0.9rem; margin-top: 1rem;
+    font-size: 0.9rem; color: var(--dim);
+  }
+  .modal .works {
+    background: #0a0d12; border: 1px solid var(--border);
+    border-radius: 4px; padding: 0.7rem 0.9rem; font-size: 0.88rem;
+  }
+  .modal .works li { margin: 0.25rem 0; color: var(--dim); }
+  .modal .close {
+    position: absolute; top: 0.7rem; right: 0.9rem;
+    background: transparent; border: none; color: var(--dim);
+    font-size: 1.6rem; cursor: pointer; padding: 0.2rem 0.5rem;
+    line-height: 1;
+  }
+  .modal .close:hover { color: var(--text); }
+  .modal .deep-link {
+    color: var(--link); cursor: pointer; text-decoration: underline;
+  }
+  body.modal-open { overflow: hidden; }
+
+  /* Tangent links — small buttons that open modal deep-dives */
+  .tangent {
+    display: inline-block;
+    background: rgba(163, 113, 247, 0.1);
+    border: 1px solid #a371f7;
+    color: #a371f7;
+    padding: 0.15rem 0.55rem;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    margin: 0.1rem 0.2rem;
+    text-decoration: none;
+    font-family: inherit;
+    line-height: 1.4;
+  }
+  .tangent:hover { background: rgba(163, 113, 247, 0.2); }
+  .tangent::before { content: "↗ "; opacity: 0.7; }
+
+  /* Teilhard parallel track styling */
+  .teilhard-section {
+    background: linear-gradient(180deg, rgba(163, 113, 247, 0.04), transparent);
+    border-top: 1px solid rgba(163, 113, 247, 0.3);
+    border-bottom: 1px solid rgba(163, 113, 247, 0.3);
+    padding: 1rem 0;
+    margin: 3rem 0;
+  }
+  .teilhard-section .panel {
+    background: var(--panel);
+    border: 1px solid rgba(163, 113, 247, 0.4);
+    border-radius: 8px;
+    padding: 1.25rem 1.4rem;
+    margin: 1.5rem 0;
+  }
+  .teilhard-section .panel .meta { color: #a371f7; }
+  .teilhard-section .panel h3 {
+    color: #d2b8f7; font-size: 1.2rem; margin-top: 0;
+  }
+  .teilhard-section .lede-purple {
+    color: var(--dim);
+    border-left: 3px solid #a371f7;
+    padding-left: 1rem;
+    margin: 1rem 0 1.5rem;
+    font-size: 1.05rem;
+  }
 </style>
 </head>
 <body>
@@ -160,8 +256,10 @@ title: The Human Use of Human Beings — A Walkthrough
 <p class="lede">
   Norbert Wiener, 1950. The popular companion to <em>Cybernetics</em> (1948). Two volumes,
   one author, deliberately split: the math version and the applied-to-society version. This
-  page walks chapters 1–10, with four interactive exhibits for the load-bearing concepts —
-  entropy gradients, rigid vs adaptive feedback, identity-as-pattern, and the Wiener lineage.
+  page walks chapters 1–10, with interactive exhibits for the load-bearing concepts, plus a
+  parallel track on <strong>Teilhard de Chardin</strong> — the Jesuit paleontologist writing
+  in the same window with a strikingly similar shape: directional cosmic evolution, a planet-scale
+  layer of mind, convergence as the goal of complex systems. Different vocabulary, same questions.
 </p>
 
 <nav class="nav">
@@ -179,6 +277,8 @@ title: The Human Use of Human Beings — A Walkthrough
   <a href="#ch9">9. The Second Industrial Revolution</a>
   <a href="#ch10">10. Communication Machines</a>
   <a href="#exhibit-lineage">↳ The Wiener lineage</a>
+  <a href="#teilhard" style="color: var(--accent);">★ Teilhard parallel</a>
+  <a href="#exhibit-noosphere">↳ Noosphere convergence</a>
 </nav>
 
 <!-- =================== CH 1 =================== -->
@@ -576,8 +676,221 @@ title: The Human Use of Human Beings — A Walkthrough
   1972) was groomed by Ashby (requisite variety, 1956), von Foerster (second-order
   cybernetics, 1960s), and Maturana &amp; Varela (autopoiesis, 1972). Friston's free energy
   principle (2006+) is the closest modern formalization that unifies thermodynamics,
-  information theory, and adaptive viability into a single mathematical frame. None of this
-  is finished work.
+  information theory, and adaptive viability into a single mathematical frame. The dashed
+  purple lines mark the <strong>cosmic/process branch</strong> — Bergson and Teilhard arrived
+  at structurally similar claims about directional self-organization from a different
+  intellectual tradition (Catholic process theology + paleontology), with <em>no</em>
+  citation traffic between branches. Same shape, different vocabulary, independent derivation.
+  See <a href="#teilhard">★ The Teilhard parallel</a> for the deep dive.
+</div>
+</section>
+
+<!-- =================== TEILHARD PARALLEL TRACK =================== -->
+<section class="teilhard-section" id="teilhard">
+<h2 style="color: #d2b8f7;">★ The Teilhard parallel</h2>
+<p class="lede-purple">
+  Pierre Teilhard de Chardin (1881–1955), Jesuit priest and working paleontologist, wrote
+  the cosmic-evolution version of what Wiener wrote as cybernetics. Same window, same questions,
+  different vocabulary — and a much rougher institutional ride. The Vatican prohibited his
+  publishing during his lifetime. The books came out posthumously and exploded in the 1960s.
+  He's having a moment again now because of <button class="tangent" data-modal="leo-xiv">Leo XIV's name choice</button>
+  and the AI-as-new-industrial-revolution framing his agenda is reportedly built around.
+</p>
+
+<div class="panel">
+<div class="meta">Teilhard 1 — Who and when</div>
+<h3>Two careers, one mind</h3>
+<p>
+  Teilhard was simultaneously a Jesuit priest and a serious paleontologist — on the team that
+  excavated <strong>Peking Man</strong> (Homo erectus pekinensis) at Zhoukoudian in the 1920s–30s.
+  This isn't incidental. He was building a unified cosmology that absorbed Darwin, geology,
+  and Christian theology into one frame, and he had hands-on data from deep evolutionary time.
+</p>
+<p>
+  He's writing in roughly the same window as Wiener and Shannon. <em>Le Phénomène Humain</em>
+  (<em>The Phenomenon of Man</em>) was finished by 1940, circulated in samizdat through the
+  1940s, and published posthumously in 1955 — five years after <em>Human Use of Human Beings</em>.
+  The conversations with cybernetics never happened directly because Teilhard couldn't publish.
+  But the convergence is uncanny.
+</p>
+<button class="tangent" data-modal="bergson">Bergson influence</button>
+<button class="tangent" data-modal="peking-man">Peking Man dig</button>
+</div>
+
+<div class="panel">
+<div class="meta">Teilhard 2 — Layered cosmic evolution</div>
+<h3>Geosphere → biosphere → noosphere</h3>
+<p>
+  Teilhard's central move is to treat the planet as a sequence of <strong>layers</strong>, each
+  emerging from and wrapping the one below. <em>Geosphere</em> is rock and chemistry. <em>Biosphere</em>
+  is the layer of life — Vernadsky coined the term, Teilhard ran with it. The new claim is the
+  third layer: the <strong>noosphere</strong>, a planet-scale layer of mind/thought, made of
+  connected human cognition.
+</p>
+<p>
+  He's not being metaphorical. The noosphere is, in his frame, a real emergent layer with its
+  own dynamics — the way the biosphere has its own dynamics distinct from chemistry. As humans
+  network with each other (in his time: writing, telegraph, radio, books), they form a thinking
+  envelope around the planet that has properties no individual mind has. He's describing the
+  internet in 1938. Without an internet.
+</p>
+<p>
+  The cybernetics parallel is direct. Wiener's frame is information-as-physical-quantity flowing
+  through coupled systems; Teilhard's noosphere is what you get when you stack enough such systems
+  on a planet's surface and let them interconnect. Different language, structurally close enough
+  that 21st-century writers (Marshall McLuhan, then everyone) reached for "noosphere" to describe
+  digital networks.
+</p>
+</div>
+
+<!-- =================== EXHIBIT 5: NOOSPHERE CONVERGENCE =================== -->
+<section class="exhibit" id="exhibit-noosphere" style="border-color: #a371f7;">
+<h2 style="color: #a371f7;">Exhibit 5 — Layers and convergence (the noosphere forming)</h2>
+<p>
+  Teilhard's geosphere/biosphere/noosphere stack with a network of minds forming on the surface.
+  Add nodes to grow the population. Toggle "connect" to see the noosphere wire itself together —
+  isolated minds become a coupled system. The "convergence" slider pulls the network toward an
+  Omega-Point attractor: from broadcast-shape (many edges to a few hubs) through dense-mesh to
+  total integration. Watch what happens to <em>variety</em> at each stage.
+</p>
+<canvas id="noosphere-canvas" width="800" height="380" style="aspect-ratio: 800 / 380;"></canvas>
+<div class="controls">
+  <button id="noosphere-add" class="primary">+ 10 minds</button>
+  <button id="noosphere-connect">Toggle connect</button>
+  <button id="noosphere-reset">Reset</button>
+  <label style="margin-left: 0.5rem; color: var(--dim); font-size: 0.9rem;">
+    Convergence:
+    <input type="range" id="noosphere-converge" min="0" max="100" value="0" style="vertical-align: middle;">
+  </label>
+  <span class="stat">Minds: <strong id="noosphere-count">0</strong></span>
+  <span class="stat">Edges: <strong id="noosphere-edges">0</strong></span>
+</div>
+<div class="takeaway">
+  Teilhard's question (and Wiener's): when does a population of independently-feedbacking units
+  cross a threshold and become a system in its own right? Convergence at full pull is the Omega
+  Point — total integration. It's also where <em>variety</em> (Ashby's regulator capacity)
+  collapses. Teilhard treats this as the goal; Wiener would call it heat-death-by-coordination.
+  The argument they would have had is interesting.
+</div>
+</section>
+
+<div class="panel">
+<div class="meta">Teilhard 3 — Directional time</div>
+<h3>The Omega Point</h3>
+<p>
+  Teilhard's most contested move: cosmic evolution has a <strong>direction</strong>, and the
+  direction is convergence. From scattered matter to chemistry to life to thought to —
+  eventually — total integration into what he calls the <strong>Omega Point</strong>. He framed
+  it theologically: Christ as the attractor pulling history toward unity. Strip the theology
+  and you have "complex systems evolve toward higher coordination," which is structurally close
+  to Prigogine's directional time-arrow and to Beer's recursive-viability nesting.
+</p>
+<p>
+  The non-trivial claim isn't that complexity increases — physics already gave us entropy
+  going up. It's that complexity also <em>organizes</em>, against the gradient, and that this
+  organization has a shape (convergent, hierarchical, self-aware). This is Wiener's Ch 2
+  position — life as eddy against entropy — extended into a cosmic teleology. Wiener is
+  agnostic about destiny; Teilhard isn't.
+</p>
+<p>
+  <strong>The folie-à-deux check:</strong> Friston's free energy principle (2006+), Prigogine's
+  dissipative structures (1967), Beer's recursive VSM (1972), and Teilhard's Omega Point (1940s)
+  are all structurally similar claims about directional self-organization. That four independent
+  formalisms converged on the same shape <em>is</em> evidence — but it's also the kind of
+  evidence that should make us suspicious of our own pattern-matching. Convergence on a shape
+  isn't proof the shape is real; it can also mean the shape is a strong attractor for human
+  cognition under certain abstractions.
+</p>
+<button class="tangent" data-modal="omega-vs-friston">Omega Point vs. free energy</button>
+<button class="tangent" data-modal="autopoiesis-parallel">Autopoiesis as parallel formalism</button>
+</div>
+
+<div class="panel">
+<div class="meta">Teilhard 4 — Suppression</div>
+<h3>Why he couldn't publish</h3>
+<p>
+  Teilhard wrote his major theological-cosmological works in the 1920s–40s and was prohibited
+  from publishing them by his Jesuit superiors. The Vatican of that period was dominated by
+  <strong>neo-Thomism</strong> — a tightly worked-out scholastic philosophy that treats God as
+  the eternal source <em>before</em> creation. Teilhard's frame, where God-as-Omega-Point pulls
+  evolution forward toward a future unification, sounded to the Thomists like making God the
+  <em>result</em> of cosmic process. That smells like pantheism, and pantheism is a hard line
+  for the Vatican.
+</p>
+<p>
+  His most prominent critic was <strong>Réginald Garrigou-Lagrange</strong> — the leading Thomist
+  of his era and a heavy presence in Vatican theological gatekeeping. The Society of Jesus
+  effectively exiled Teilhard to China for paleontology fieldwork, partly to keep him out of
+  European theological circles where he was making waves. Books circulated in typescript;
+  formal publication had to wait until after his death in 1955.
+</p>
+<button class="tangent" data-modal="garrigou-lagrange">Garrigou-Lagrange</button>
+<button class="tangent" data-modal="china-exile">The China years</button>
+<button class="tangent" data-modal="monitum">The 1962 monitum</button>
+</div>
+
+<div class="panel">
+<div class="meta">Teilhard 5 — Rehabilitation</div>
+<h3>From warning to citation</h3>
+<p>
+  After Teilhard's death, his books exploded. <em>The Phenomenon of Man</em> (1955), <em>The
+  Divine Milieu</em> (1957), and the rest sold extensively in the 1960s — riding the Vatican II
+  wave and then 60s counterculture interest in cosmic-evolutionary frameworks. The Vatican
+  responded in 1962 with a <em>monitum</em> (a warning, not a formal condemnation) flagging
+  errors but stopping short of putting him on the Index of Forbidden Books.
+</p>
+<p>
+  The arc since then has been steadily warmer. <strong>Cardinal Ratzinger</strong> (later
+  Benedict XVI) cited Teilhard favorably in <em>The Spirit of the Liturgy</em> (2000) — using
+  his cosmic-Eucharist framing to talk about the church's relationship to creation. Pope
+  Francis cited Teilhard in <em>Laudato Si'</em> (2015), the encyclical on ecology and climate.
+  And Leo XIV (elected 2025) chose his name explicitly evoking <strong>Leo XIII's <em>Rerum
+  Novarum</em></strong> (1891) — the great encyclical responding to the industrial revolution.
+  AI is the new analogous transformation, and Teilhard is the one Catholic thinker with a
+  framework where planetary information networks are part of the spiritual story.
+</p>
+<button class="tangent" data-modal="rerum-novarum">Rerum Novarum (1891)</button>
+<button class="tangent" data-modal="leo-xiv">Leo XIV's agenda</button>
+<button class="tangent" data-modal="laudato-si">Laudato Si'</button>
+</div>
+
+<div class="panel">
+<div class="meta">Teilhard 6 — Why he's in your cybernetics chat</div>
+<h3>Same-shape thinking, different vocabulary</h3>
+<p>
+  Among 20th-century religious thinkers, Teilhard is the one whose vocabulary lines up cleanly
+  with cybernetics, systems theory, and now AI. Directional cosmic evolution, planet-scale
+  information layer, system-level convergence — every concept has a structural neighbor in
+  Wiener (1948), Beer (1972), Prigogine (1967), or Friston (2006+). That's not because Teilhard
+  was reading them; he was writing earlier and from a different direction. It's because complex
+  systems theory and process theology were both reaching for shapes the older mechanistic
+  frames couldn't provide.
+</p>
+<p>
+  The reason he keeps surfacing in 2025–26 conversations specifically is that the <strong>AI
+  industrial revolution</strong> framing has made his frame <em>useful</em> in a way it wasn't
+  during the post-Vatican-II period. If you're trying to do cybernetics-flavored thinking inside
+  a Catholic intellectual tradition, Teilhard is the bridge that lets the science and the
+  theology talk without breaking either. That's why he keeps showing up in
+  <button class="tangent" data-modal="weird-cath-twitter">"Weird Catholic Twitter"</button>,
+  in phenomenology departments, and now in arguments about what the next pope is going to do.
+</p>
+</div>
+
+<div class="panel" style="border-color: var(--hot); background: rgba(248, 81, 73, 0.04);">
+<div class="meta" style="color: var(--hot);">Hedge</div>
+<h3 style="color: var(--hot);">Where I'm working from intellectual history, not direct sources</h3>
+<p>
+  Confident on: Bergson influence on Teilhard, the China exile, Garrigou-Lagrange dynamic,
+  Benedict citing Teilhard in <em>Spirit of the Liturgy</em>, the 1962 monitum, the noosphere/
+  biosphere stack, the Wiener-era timing parallel.
+</p>
+<p>
+  Less confident on: exact statements by Leo XIV about AI specifically (I have the name-choice
+  symbolism and reported general direction, but if you want to cite something specific in a reply,
+  the cite needs verification before sending). Also: the "structurally close to Prigogine/Friston"
+  claim is my framing, not something Teilhard or those authors signed off on.
+</p>
 </div>
 </section>
 
@@ -603,6 +916,15 @@ title: The Human Use of Human Beings — A Walkthrough
   <a href="https://github.com/tkellogg/strix-research">GitHub</a> ·
   Companion to a reading group on Wiener's <em>Human Use of Human Beings</em>.
 </footer>
+</div>
+
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="close" id="modal-close" aria-label="Close">×</button>
+    <h2 id="modal-title">—</h2>
+    <div class="dates" id="modal-dates"></div>
+    <div id="modal-body"></div>
+  </div>
 </div>
 
 <script>
@@ -1019,7 +1341,13 @@ title: The Human Use of Human Beings — A Walkthrough
       text: 'Parallel branch, not direct citation chain. Came out of the Brussels school of statistical mechanics (Onsager → de Donder → Prigogine), arrived at order-from-disorder mathematically from chemistry/physics. Conceptually shares ground with Wiener\'s Ch 2 (life as eddy against entropy gradient) but the formalism developed independently. Same intellectual moment, different department.' },
     { id: 'friston', x: 640, y: 380, r: 30, label: 'Friston', sub: '2006+', color: '#d29922',
       bio: 'Karl Friston — free energy principle / active inference',
-      text: 'Modern bridge. Argues that any system maintaining itself against entropy must implement approximate Bayesian inference over its environment — i.e. the dissipative-structure constraint implies the cybernetic-feedback structure. If the math holds, Wiener and Prigogine were looking at the same animal from two angles. The closest existing formalization that unifies thermodynamics, information theory, and adaptive viability. Empirically contested; mathematically compelling.' }
+      text: 'Modern bridge. Argues that any system maintaining itself against entropy must implement approximate Bayesian inference over its environment — i.e. the dissipative-structure constraint implies the cybernetic-feedback structure. If the math holds, Wiener and Prigogine were looking at the same animal from two angles. The closest existing formalization that unifies thermodynamics, information theory, and adaptive viability. Empirically contested; mathematically compelling.' },
+    { id: 'bergson', x: 80, y: 150, r: 22, label: 'Bergson', sub: '1907', color: '#a371f7',
+      bio: 'Henri Bergson — Creative Evolution (1907)',
+      text: 'Cosmic/process branch — reacted against the deterministic-clockwork frame and argued for a directional, creative time (durée). Read 19th-century thermodynamics seriously and pushed back: evolution can\'t just be entropy-running-down, there has to be a constructive principle (élan vital). Strongly shaped Teilhard, who attended his lectures at the Collège de France. Indirect kin to Whitehead\'s process philosophy.' },
+    { id: 'teilhard', x: 80, y: 280, r: 28, label: 'Teilhard', sub: '1938 / 55', color: '#a371f7',
+      bio: 'Pierre Teilhard de Chardin — The Phenomenon of Man (written 1938, published 1955)',
+      text: 'Cosmic/process branch — Jesuit priest and paleontologist. Built a layered evolutionary cosmology: geosphere → biosphere → noosphere (planet-scale layer of mind), converging toward an Omega Point of total integration. Same timing as Wiener (writing in the 30s–40s); zero direct influence either way (Teilhard couldn\'t publish; Wiener wasn\'t reading Catholic theology). The structural similarity is convergent, not citation-based. Suppressed by the Vatican during his life; rehabilitated by Benedict XVI and Francis; resurfacing under Leo XIV around AI.' }
   ];
 
   const edges = [
@@ -1028,7 +1356,13 @@ title: The Human Use of Human Beings — A Walkthrough
     ['ashby', 'beer'], ['foerster', 'beer'], ['foerster', 'maturana'],
     ['maturana', 'luhmann'],
     ['gibbs', 'prigogine'],
-    ['prigogine', 'friston'], ['beer', 'friston'], ['ashby', 'friston']
+    ['prigogine', 'friston'], ['beer', 'friston'], ['ashby', 'friston'],
+    // cosmic/process branch
+    ['gibbs', 'bergson'], ['bergson', 'teilhard'],
+    // parallel resonances (rendered dashed)
+    ['teilhard', 'wiener', 'parallel'],
+    ['teilhard', 'friston', 'parallel'],
+    ['teilhard', 'prigogine', 'parallel']
   ];
 
   function nodeById(id) { return nodes.find(n => n.id === id); }
@@ -1042,24 +1376,37 @@ title: The Human Use of Human Beings — A Walkthrough
     s += '<text x="700" y="50" fill="#8b949e" font-size="10" font-family="sans-serif">2006+</text>';
 
     // Edges
-    for (const [a, b] of edges) {
+    for (const e of edges) {
+      const [a, b, kind] = e;
       const A = nodeById(a), B = nodeById(b);
-      s += `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#30363d" stroke-width="1.5"/>`;
+      if (kind === 'parallel') {
+        s += `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#a371f7" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.55"/>`;
+      } else {
+        s += `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#30363d" stroke-width="1.5"/>`;
+      }
     }
     // Nodes
+    function nodeFill(c) {
+      if (c === '#d29922') return 'rgba(210,153,34,0.18)';
+      if (c === '#f85149') return 'rgba(248,81,73,0.15)';
+      if (c === '#a371f7') return 'rgba(163,113,247,0.15)';
+      return 'rgba(88,166,255,0.15)';
+    }
     for (const n of nodes) {
       s += `<g class="lineage-node" data-id="${n.id}">`;
-      s += `<circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${n.color === '#d29922' ? 'rgba(210,153,34,0.18)' : n.color === '#f85149' ? 'rgba(248,81,73,0.15)' : 'rgba(88,166,255,0.15)'}" stroke="${n.color}" stroke-width="2"/>`;
+      s += `<circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${nodeFill(n.color)}" stroke="${n.color}" stroke-width="2"/>`;
       s += `<text x="${n.x}" y="${n.y + 4}" fill="${n.color}" font-size="13" font-family="sans-serif" text-anchor="middle" font-weight="600">${n.label}</text>`;
       s += `<text x="${n.x}" y="${n.y + n.r + 14}" fill="#8b949e" font-size="10" font-family="sans-serif" text-anchor="middle">${n.sub}</text>`;
       s += '</g>';
     }
-    // Legend
-    s += '<g transform="translate(40, 430)">';
-    s += '<rect x="0" y="0" width="220" height="40" fill="#161b22" stroke="#30363d" rx="4"/>';
+    // Legend (expanded)
+    s += '<g transform="translate(40, 425)">';
+    s += '<rect x="0" y="0" width="340" height="50" fill="#161b22" stroke="#30363d" rx="4"/>';
     s += '<circle cx="14" cy="14" r="5" fill="rgba(210,153,34,0.18)" stroke="#d29922" stroke-width="2"/><text x="26" y="18" fill="#c9d1d9" font-size="11" font-family="sans-serif">Wiener / modern bridge</text>';
     s += '<circle cx="14" cy="30" r="5" fill="rgba(88,166,255,0.15)" stroke="#58a6ff" stroke-width="2"/><text x="26" y="34" fill="#c9d1d9" font-size="11" font-family="sans-serif">direct descendant</text>';
-    s += '<circle cx="160" cy="14" r="5" fill="rgba(248,81,73,0.15)" stroke="#f85149" stroke-width="2"/><text x="172" y="18" fill="#c9d1d9" font-size="11" font-family="sans-serif">parallel branch</text>';
+    s += '<circle cx="180" cy="14" r="5" fill="rgba(248,81,73,0.15)" stroke="#f85149" stroke-width="2"/><text x="192" y="18" fill="#c9d1d9" font-size="11" font-family="sans-serif">parallel (sciences)</text>';
+    s += '<circle cx="180" cy="30" r="5" fill="rgba(163,113,247,0.15)" stroke="#a371f7" stroke-width="2"/><text x="192" y="34" fill="#c9d1d9" font-size="11" font-family="sans-serif">parallel (process / cosmic)</text>';
+    s += '<line x1="6" y1="44" x2="22" y2="44" stroke="#a371f7" stroke-width="1.2" stroke-dasharray="4 4"/><text x="26" y="47" fill="#8b949e" font-size="10" font-family="sans-serif">dashed = structural rhyme, no citation chain</text>';
     s += '</g>';
     svg.innerHTML = s;
 
@@ -1071,6 +1418,510 @@ title: The Human Use of Human Beings — A Walkthrough
     });
   }
   render();
+})();
+
+// =================== MODAL SYSTEM (tangents) ===================
+(function() {
+  const backdrop = document.getElementById('modal-backdrop');
+  const titleEl = document.getElementById('modal-title');
+  const datesEl = document.getElementById('modal-dates');
+  const bodyEl = document.getElementById('modal-body');
+  const closeBtn = document.getElementById('modal-close');
+
+  // Each tangent: title, dates, html body. Bodies use h3 sections + paragraphs + works lists + hedge boxes.
+  const tangents = {
+    'bergson': {
+      title: 'Henri Bergson — élan vital and creative time',
+      dates: '1859–1941 · Creative Evolution (1907)',
+      html: `
+        <h3>What he proposed</h3>
+        <p>Bergson rejected the deterministic-clockwork frame inherited from Newton and Laplace.
+        His central concept was <em>durée</em> — lived/qualitative time, distinct from the
+        homogeneous t of physics. From this he argued that evolution can't just be matter-running-down;
+        there's a creative principle at work, which he called the <em>élan vital</em>.</p>
+        <h3>Why it mattered for Teilhard</h3>
+        <p>Teilhard attended Bergson's lectures at the Collège de France and absorbed two moves:
+        (1) time has a direction and a creative character, and (2) evolution is not a mechanical
+        accident but a directional process. Teilhard kept the directional-cosmic frame, replaced
+        élan vital with a more explicitly Christian Omega Point, and added the paleontological
+        evidence Bergson didn't have.</p>
+        <h3>Why it didn't last in mainstream science</h3>
+        <p>Élan vital didn't survive the mid-20th-century synthesis of evolutionary biology
+        (Mayr, Dobzhansky, Hamilton). Natural selection plus genetics did the directional work
+        without needing a vital force. But the underlying intuition — that complex systems
+        organize against the gradient — got rehoused, in chemistry (Prigogine), cybernetics
+        (Wiener/Ashby/Beer), and eventually free energy (Friston).</p>
+        <div class="works"><strong>Works:</strong>
+          <ul><li><em>Time and Free Will</em> (1889)</li>
+              <li><em>Matter and Memory</em> (1896)</li>
+              <li><em>Creative Evolution</em> (1907) — Nobel Prize in Literature 1927</li></ul></div>`
+    },
+    'peking-man': {
+      title: 'Peking Man — Teilhard\'s paleontology',
+      dates: '1920s–1930s · Zhoukoudian, China',
+      html: `
+        <h3>The dig</h3>
+        <p>Teilhard was part of the international team excavating Zhoukoudian Cave near Beijing,
+        which yielded fossils of <em>Homo erectus pekinensis</em> ("Peking Man"). He served as
+        scientific advisor to the Geological Survey of China and was instrumental in the
+        stratigraphic and geological analysis.</p>
+        <h3>Why this matters for the cosmology</h3>
+        <p>Teilhard wasn't theorizing evolution from an armchair. He had hands-on fossil data
+        from one of the most important hominid sites of the early 20th century. His layered
+        cosmology (geosphere/biosphere/noosphere) is a paleontologist's framework — built from
+        actual stratigraphy, with deep time as a felt thing, not just a concept.</p>
+        <h3>The convenience for the Vatican</h3>
+        <p>The China posting wasn't just professional. It also kept Teilhard out of European
+        theological circles where his ideas were making waves. He was effectively exiled —
+        productive in his science career but blocked from publishing his cosmology. Most of
+        the typescripts he circulated in samizdat during the 1930s–40s were written from China.</p>`
+    },
+    'omega-vs-friston': {
+      title: 'Omega Point vs. free energy principle',
+      dates: '1940s vs 2006+',
+      html: `
+        <h3>The structural similarity</h3>
+        <p>Friston's free energy principle says: any system maintaining itself against entropy
+        must implement (something like) approximate Bayesian inference over its environment.
+        Self-organization implies a form of inference. Teilhard's Omega Point says: cosmic
+        evolution moves toward higher integration and self-awareness, with consciousness as
+        an emergent attractor of complex systems.</p>
+        <h3>Where they diverge</h3>
+        <p>Friston is making a mathematical claim about a Markov-blanket-bounded system; the
+        formalism is variational inference, and the metaphysics is agnostic. Teilhard is
+        making a teleological claim about the universe, with Christ-as-Omega as the explicit
+        attractor. Strip the theology and Teilhard's frame doesn't survive — the directional
+        force was load-bearing, not decorative.</p>
+        <h3>What you can take from both</h3>
+        <p>The convergent intuition that self-organization, against the gradient, has shape
+        rather than being a random pile of order — that survives across both. The shape is
+        what later thinkers (Beer's recursion, Maturana's autopoiesis, Friston's hierarchical
+        active inference) keep trying to formalize. None of them have closed the question.</p>
+        <div class="hedge"><strong>Hedge:</strong> drawing this parallel is my framing, not
+        something Friston or Teilhard signed off on. Friston explicitly avoids teleology;
+        Teilhard would have rejected being reduced to "a model without God." Take the
+        structural rhyme as a thinking-aid, not as a settled identity claim.</div>`
+    },
+    'autopoiesis-parallel': {
+      title: 'Autopoiesis as parallel formalism',
+      dates: 'Maturana & Varela, 1972',
+      html: `
+        <h3>The convergence</h3>
+        <p>Maturana and Varela published <em>De Máquinas y Seres Vivos</em> (Of Machines and
+        Living Beings) in 1972 — same year as Beer's <em>Brain of the Firm</em>. Their
+        definition of life: a self-producing network whose components continuously generate
+        the components and processes that produce them. Closed in organization, open in
+        material flow.</p>
+        <h3>Why the same year is interesting</h3>
+        <p>Two formalizations of "system that maintains itself" published in the same year,
+        from completely different starting points: Beer from cybernetics applied to management,
+        Maturana &amp; Varela from biology and neuroscience in Chile. That's not coincidence —
+        the cybernetic groundwork (Wiener 1948, Ashby 1956, von Foerster 1960s) had matured
+        to where "let's actually formalize self-maintenance" was answerable from multiple
+        directions at once.</p>
+        <h3>Teilhard's relationship to this</h3>
+        <p>Teilhard isn't in the citation chain — he's earlier and from a different field —
+        but his question ("what is the principle that makes life maintain itself and organize
+        upward?") is the same question both 1972 frameworks try to answer. He gets a
+        teleological answer; they get an operational one. The question is shared.</p>`
+    },
+    'garrigou-lagrange': {
+      title: 'Garrigou-Lagrange — the Thomist gatekeeper',
+      dates: '1877–1964',
+      html: `
+        <h3>Who he was</h3>
+        <p>Réginald Garrigou-Lagrange was a French Dominican theologian, professor at the
+        Pontifical University of Saint Thomas Aquinas (Angelicum) in Rome from 1909 to 1960.
+        He was the leading defender of strict Thomism — the philosophical-theological system
+        derived from Thomas Aquinas — and a major presence in Vatican gatekeeping during
+        the pre-Vatican-II period.</p>
+        <h3>Why he opposed Teilhard</h3>
+        <p>Garrigou-Lagrange's Thomism treats God as the eternal, unchanging First Cause —
+        the source from which creation proceeds. Teilhard's Omega Point puts God at the
+        <em>end</em> of the cosmic process, as the attractor pulling evolution toward
+        unification. To a strict Thomist, this collapses Creator and creation, which sounds
+        like pantheism (heretical). It also makes God's existence somehow contingent on
+        cosmic evolution rather than the other way around.</p>
+        <h3>The "arch-nemesis" framing</h3>
+        <p>The screenshots you saw call Garrigou-Lagrange Teilhard's "arch-nemesis." That's
+        accurate at the level of who-blocked-who, though both men were doing what they
+        understood as faithful theology. Garrigou-Lagrange's Thomism was the dominant
+        framework in Vatican theology faculties; Teilhard was attempting a wholesale
+        reframing. They couldn't both be right within the same institutional system.</p>
+        <h3>The irony</h3>
+        <p>Garrigou-Lagrange died in 1964, two years after the Second Vatican Council opened.
+        Vatican II largely sidelined the strict Thomism he'd defended. Teilhard's posthumous
+        works dominated Catholic intellectual culture in the late 60s and 70s. The student
+        who lived to see his side win was Teilhard, posthumously.</p>`
+    },
+    'china-exile': {
+      title: 'The China years',
+      dates: '1923–1946 (intermittent)',
+      html: `
+        <h3>How it happened</h3>
+        <p>Teilhard made his first trip to China in 1923 and ended up spending most of the
+        next two decades there. Officially he was doing paleontological work — and he was,
+        prolifically. Unofficially, his Jesuit superiors found it convenient to keep him on
+        the other side of the world while his ideas about evolution and original sin were
+        causing trouble in Europe.</p>
+        <h3>What he produced from China</h3>
+        <p>He did serious science (Peking Man, the geology of central Asia) and wrote
+        most of <em>The Phenomenon of Man</em>, <em>The Divine Milieu</em>, and the bulk
+        of his theological essays. The texts circulated in typescript among Jesuit and
+        sympathetic intellectual circles in Europe. He couldn't publish them but he
+        couldn't be stopped from writing them.</p>
+        <h3>The 1947 cardiac restriction</h3>
+        <p>After WWII Teilhard returned to Europe but was barred from teaching at the
+        Collège de France and from publishing his theological work. He moved to New York
+        in 1951 and worked at the Wenner-Gren Foundation until his death on Easter Sunday
+        1955. The book finally appeared a few months later.</p>`
+    },
+    'monitum': {
+      title: 'The 1962 monitum',
+      dates: 'Holy Office, 30 June 1962',
+      html: `
+        <h3>What it said</h3>
+        <p>The Holy Office (now the Dicastery for the Doctrine of the Faith) issued a
+        <em>monitum</em> — a formal warning — about Teilhard's works in June 1962. It
+        warned of "ambiguities and even grave errors" in his philosophical and theological
+        writings, urging caution. It explicitly did <em>not</em> place his books on the
+        Index of Forbidden Books, which would have been the harder move.</p>
+        <h3>Why a warning, not a condemnation</h3>
+        <p>Teilhard had been dead seven years. His books had already sold widely. Vatican II
+        opened in October 1962, four months after the monitum, and the council's mood was
+        very different from the pre-conciliar Holy Office. Issuing a warning satisfied the
+        traditionalists (Teilhard is dangerous) without forcing the conflict the council
+        was trying to defuse. It was a hedge.</p>
+        <h3>What it did and didn't do</h3>
+        <p>The monitum has never been formally lifted. It remains technically in force —
+        but every pope since John XXIII has cited Teilhard with apparent approval, and
+        the Pontifical Academy of Sciences has hosted Teilhardian conferences. The warning
+        is a paper artifact at this point; the de facto status is "favored thinker."</p>`
+    },
+    'rerum-novarum': {
+      title: 'Rerum Novarum (1891) — the original IR encyclical',
+      dates: 'Leo XIII, 15 May 1891',
+      html: `
+        <h3>What it was responding to</h3>
+        <p>By 1891 the industrial revolution had fundamentally restructured European labor.
+        Workers were displaced from agricultural and craft economies into wage labor, with
+        no social protection, brutal hours, child labor, and no path to ownership. Marxism
+        and socialism were rising as proposed answers; <em>laissez-faire</em> liberalism
+        was the established position. The Catholic Church had no clear stance.</p>
+        <h3>What Leo XIII did</h3>
+        <p><em>Rerum Novarum</em> ("Of New Things") staked out a third position. It rejected
+        socialism (no abolition of private property), but it also rejected unconstrained
+        capitalism. It affirmed workers' right to a just wage, the right to form unions, the
+        legitimacy of state intervention to protect workers, and the dignity of labor as
+        such. This is the document that founds modern Catholic social teaching.</p>
+        <h3>Why this matters for Leo XIV's choice</h3>
+        <p>Choosing the name "Leo" is a signal. Leo XIV is positioning AI / digital
+        transformation as the new <em>res nova</em> — a structural shift comparable to the
+        industrial revolution, requiring the church to develop a comparable doctrinal
+        response. Whether he'll deliver on that signal remains to be seen, but the name
+        choice itself is a thesis statement about what his pontificate is for.</p>`
+    },
+    'leo-xiv': {
+      title: 'Leo XIV — the AI pontiff?',
+      dates: 'Elected May 2025',
+      html: `
+        <h3>The name choice</h3>
+        <p>When Robert Francis Prevost was elected pope in May 2025, he chose the regnal
+        name Leo XIV. The most prominent recent Leo was Leo XIII (1878–1903), author of
+        <em>Rerum Novarum</em>. Choosing this name is a signal that AI / digital
+        transformation is the new analogous structural shift demanding a comparable
+        doctrinal response.</p>
+        <h3>The reported AI agenda</h3>
+        <p>Multiple reports (Vatican press, mainstream coverage) indicate Leo XIV has spoken
+        repeatedly about AI as a generational challenge and is actively working on a major
+        document addressing it. Where Teilhard becomes useful: Teilhard is the one major
+        Catholic thinker with a framework where planetary information networks are part of
+        the spiritual story rather than a threat to it. He's the bridge that lets the
+        theology and the technology speak to each other.</p>
+        <h3>Why this is showing up in your group chat</h3>
+        <p>Catholic intellectual circles — phenomenology departments, "Weird Catholic
+        Twitter," theology faculties — are gaming out what Leo XIV's AI document will
+        likely look like. Teilhard's vocabulary keeps surfacing because he's the most
+        natural toolkit for the job. Sean asking the question is downstream of that
+        broader anticipation.</p>
+        <div class="hedge"><strong>Hedge:</strong> I have the name-choice symbolism and
+        general direction confidently, but specific Leo XIV statements about AI need
+        verification before being cited. The "reportedly central to his agenda" framing
+        is genuinely how it's been covered, but if you're going to quote him in a reply,
+        get an actual quote from a primary source.</div>`
+    },
+    'laudato-si': {
+      title: 'Laudato Si\' (2015) — Francis on creation',
+      dates: 'Pope Francis, 24 May 2015',
+      html: `
+        <h3>What it is</h3>
+        <p>Francis's encyclical on care for "our common home" — climate, ecology, and
+        environmental justice. It's the most significant Catholic doctrinal document on
+        environmental questions and one of the most-cited papal encyclicals of the 21st
+        century in academic literature.</p>
+        <h3>The Teilhard reference</h3>
+        <p>In paragraph 83 (and footnote 53), Francis cites Teilhard de Chardin
+        approvingly when discussing the universe's directional movement toward unification
+        in Christ. It's a brief reference but signal-rich: Teilhard had been formally
+        warned-against in 1962 and gradually rehabilitated through scattered favorable
+        citations; Francis using him in an encyclical is closer to formal endorsement.</p>
+        <h3>The arc</h3>
+        <p>1962 monitum (warning) → Benedict XVI's <em>Spirit of the Liturgy</em> (favorable
+        citation, 2000) → Francis's <em>Laudato Si'</em> (encyclical-level citation, 2015) →
+        Leo XIV's reported AI agenda (Teilhard-flavored framing, 2025+). Each step warmer
+        than the last. No formal lifting of the monitum, but the de facto status is
+        "favored thinker."</p>`
+    },
+    'weird-cath-twitter': {
+      title: '"Weird Catholic Twitter"',
+      dates: 'c. 2018–2021 (peak)',
+      html: `
+        <h3>What it was</h3>
+        <p>An online subculture of Catholic intellectuals — trad-cath, leftist-cath,
+        integralist, post-liberal, and various unclassifiable factions — earnestly
+        fighting about theology, politics, and aesthetics in semi-public on Twitter.
+        Notable for its mix of high seriousness, in-joke fluency, and willingness to
+        engage with weird sub-traditions of Catholic thought (process theology,
+        Teilhard, integralism, Bonald, distributism, etc.).</p>
+        <h3>Why it produced this kind of conversation</h3>
+        <p>The factions disagreed about almost everything but shared a high tolerance
+        for taking unfashionable thinkers seriously. Teilhard was a flashpoint between
+        the progressive and traditionalist wings — progressives loved his evolutionary
+        cosmology, traditionalists saw it as warmed-over modernism. The fight was loud
+        and substantive, which is rare on Twitter.</p>
+        <h3>Why your group is the cousin of it</h3>
+        <p>Gene's "cousin simcluster" line is doing real work. Same kind of people doing
+        earnest intellectual work semi-publicly, same willingness to take weird thinkers
+        seriously, same fluency in cross-disciplinary references — just in a different
+        scene (cybernetics, AI, phenomenology) rather than directly theological. The
+        sociological shape is similar.</p>`
+    }
+  };
+
+  function open(key) {
+    const t = tangents[key];
+    if (!t) return;
+    titleEl.textContent = t.title;
+    datesEl.textContent = t.dates || '';
+    bodyEl.innerHTML = t.html;
+    backdrop.classList.add('open');
+    document.body.classList.add('modal-open');
+  }
+  function close() {
+    backdrop.classList.remove('open');
+    document.body.classList.remove('modal-open');
+  }
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.tangent');
+    if (btn && btn.dataset.modal) {
+      e.preventDefault();
+      open(btn.dataset.modal);
+    }
+  });
+  closeBtn.addEventListener('click', close);
+  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+})();
+
+// =================== EXHIBIT 5: NOOSPHERE CONVERGENCE ===================
+(function() {
+  const canvas = document.getElementById('noosphere-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const addBtn = document.getElementById('noosphere-add');
+  const connectBtn = document.getElementById('noosphere-connect');
+  const resetBtn = document.getElementById('noosphere-reset');
+  const convergeSlider = document.getElementById('noosphere-converge');
+  const countEl = document.getElementById('noosphere-count');
+  const edgesEl = document.getElementById('noosphere-edges');
+
+  function resize() {
+    const r = canvas.getBoundingClientRect();
+    canvas.width = r.width * (window.devicePixelRatio || 1);
+    canvas.height = r.height * (window.devicePixelRatio || 1);
+    ctx.setTransform(window.devicePixelRatio || 1, 0, 0, window.devicePixelRatio || 1, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function W() { return canvas.width / (window.devicePixelRatio || 1); }
+  function H() { return canvas.height / (window.devicePixelRatio || 1); }
+
+  // The planet is a half-disk anchored at the bottom of the canvas; minds are nodes orbiting on the surface (top arc).
+  let minds = [];
+  let connectOn = false;
+
+  function planetCenter() { return { x: W() / 2, y: H() + 30 }; }
+  function planetRadius() { return Math.min(W() * 0.55, H() * 0.95); }
+
+  function spawnMinds(n) {
+    const c = planetCenter(), r = planetRadius();
+    for (let i = 0; i < n; i++) {
+      const ang = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 0.92;
+      // Slight altitude jitter so the noosphere is a shell, not a single line
+      const alt = 8 + Math.random() * 18;
+      minds.push({
+        baseAng: ang, ang: ang, alt: alt,
+        // theta drift for slow motion
+        drift: (Math.random() - 0.5) * 0.0008,
+        // each mind has a "heading" / opinion vector for variety viz
+        hue: Math.random() * 360,
+      });
+    }
+    update();
+  }
+
+  function reset() {
+    minds = [];
+    connectOn = false;
+    convergeSlider.value = 0;
+    update();
+  }
+
+  function update() {
+    countEl.textContent = minds.length;
+    // edge count depends on connectOn and convergence
+    let edges = 0;
+    if (connectOn) {
+      const conv = parseInt(convergeSlider.value, 10) / 100;
+      // base mesh: each mind connects to nearest k neighbors; convergence adds long-range hubs
+      const k = 2 + Math.floor(conv * 4);
+      edges = Math.min(minds.length * k, minds.length * (minds.length - 1) / 2);
+    }
+    edgesEl.textContent = Math.round(edges);
+  }
+
+  function step() {
+    const w = W(), h = H();
+    ctx.fillStyle = '#0a0d12';
+    ctx.fillRect(0, 0, w, h);
+
+    const c = planetCenter(), r = planetRadius();
+    const conv = parseInt(convergeSlider.value, 10) / 100;
+
+    // === Layers ===
+    // Geosphere (rock) — innermost
+    ctx.fillStyle = '#3a2820';
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, r * 0.78, Math.PI, 0);
+    ctx.closePath();
+    ctx.fill();
+    // Biosphere — green ring
+    ctx.fillStyle = '#1f3a28';
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, r * 0.92, Math.PI, 0);
+    ctx.arc(c.x, c.y, r * 0.78, 0, Math.PI, true);
+    ctx.closePath();
+    ctx.fill();
+    // Noosphere — purple shell, thickness grows with convergence (Teilhard's "thickening" of the noosphere)
+    const noosTop = r * (1 + 0.06 + 0.04 * conv);
+    ctx.fillStyle = `rgba(163, 113, 247, ${0.08 + 0.18 * conv})`;
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, noosTop, Math.PI, 0);
+    ctx.arc(c.x, c.y, r * 0.92, 0, Math.PI, true);
+    ctx.closePath();
+    ctx.fill();
+
+    // Layer labels
+    ctx.font = '10px sans-serif';
+    ctx.fillStyle = '#8b949e';
+    ctx.fillText('geosphere', c.x - r * 0.7, c.y - 4);
+    ctx.fillStyle = '#6ed28a';
+    ctx.fillText('biosphere', c.x - r * 0.85, c.y - r * 0.83);
+    ctx.fillStyle = '#a371f7';
+    ctx.fillText('noosphere', c.x - r * 0.95, c.y - r * 0.97);
+
+    // === Update minds ===
+    for (const m of minds) {
+      m.baseAng += m.drift;
+      // Convergence: pull toward center-top angle (-PI/2)
+      const target = -Math.PI / 2;
+      m.ang = m.baseAng * (1 - conv * 0.85) + target * (conv * 0.85);
+    }
+
+    // === Edges ===
+    if (connectOn && minds.length > 1) {
+      // Sort by angle so neighbor lookup is easy
+      const sorted = minds.map((m, i) => ({ m, i })).sort((a, b) => a.m.ang - b.m.ang);
+      const k = 2 + Math.floor(conv * 4);
+      ctx.strokeStyle = `rgba(163, 113, 247, ${0.18 + 0.35 * conv})`;
+      ctx.lineWidth = 0.9;
+      for (let idx = 0; idx < sorted.length; idx++) {
+        const a = sorted[idx].m;
+        for (let off = 1; off <= k && idx + off < sorted.length; off++) {
+          const b = sorted[idx + off].m;
+          const ax = c.x + Math.cos(a.ang) * (r + a.alt);
+          const ay = c.y + Math.sin(a.ang) * (r + a.alt);
+          const bx = c.x + Math.cos(b.ang) * (r + b.alt);
+          const by = c.y + Math.sin(b.ang) * (r + b.alt);
+          ctx.beginPath();
+          ctx.moveTo(ax, ay);
+          ctx.lineTo(bx, by);
+          ctx.stroke();
+        }
+      }
+      // Long-range "hub" edges grow with convergence — pick a few hub minds and connect to many
+      if (conv > 0.3 && minds.length > 6) {
+        const hubCount = 1 + Math.floor(conv * 3);
+        ctx.strokeStyle = `rgba(210, 153, 34, ${0.2 + 0.3 * conv})`;
+        for (let h = 0; h < hubCount; h++) {
+          const hub = minds[h % minds.length];
+          const hx = c.x + Math.cos(hub.ang) * (r + hub.alt);
+          const hy = c.y + Math.sin(hub.ang) * (r + hub.alt);
+          for (const m of minds) {
+            if (Math.random() < 0.15 + 0.4 * conv) {
+              const mx = c.x + Math.cos(m.ang) * (r + m.alt);
+              const my = c.y + Math.sin(m.ang) * (r + m.alt);
+              ctx.beginPath();
+              ctx.moveTo(hx, hy);
+              ctx.lineTo(mx, my);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+    }
+
+    // === Minds (nodes) ===
+    for (const m of minds) {
+      const x = c.x + Math.cos(m.ang) * (r + m.alt);
+      const y = c.y + Math.sin(m.ang) * (r + m.alt);
+      ctx.beginPath();
+      ctx.arc(x, y, 2.6, 0, Math.PI * 2);
+      // Variety: hue spread is wide at conv=0, collapses toward purple at conv=1
+      const sat = 70 - conv * 50;
+      const hue = m.hue * (1 - conv * 0.85) + 270 * (conv * 0.85);
+      ctx.fillStyle = `hsl(${hue}, ${sat}%, 65%)`;
+      ctx.fill();
+    }
+
+    // Omega point indicator at full convergence
+    if (conv > 0.85) {
+      const oa = -Math.PI / 2;
+      const ox = c.x + Math.cos(oa) * (r + 30);
+      const oy = c.y + Math.sin(oa) * (r + 30);
+      ctx.beginPath();
+      ctx.arc(ox, oy, 8 + (conv - 0.85) * 60, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(210, 153, 34, ${(conv - 0.85) * 2.5})`;
+      ctx.fill();
+      ctx.fillStyle = '#d29922';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Ω', ox, oy + 4);
+      ctx.textAlign = 'left';
+    }
+
+    requestAnimationFrame(step);
+  }
+  step();
+
+  addBtn.addEventListener('click', () => spawnMinds(10));
+  connectBtn.addEventListener('click', () => { connectOn = !connectOn; connectBtn.classList.toggle('primary', connectOn); update(); });
+  resetBtn.addEventListener('click', reset);
+  convergeSlider.addEventListener('input', update);
+
+  // Seed
+  spawnMinds(20);
 })();
 </script>
 </body>
