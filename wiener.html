@@ -427,8 +427,9 @@ title: The Human Use of Human Beings — A Walkthrough
   </label>
   <button id="feedback-shock" class="danger">Shock both</button>
   <button id="feedback-reset">Reset</button>
+  <button id="feedback-mode">Mode: gentle gain</button>
 </div>
-<div class="takeaway">
+<div class="takeaway" id="feedback-takeaway">
   Both controllers have identical strength. The only difference is that the adaptive one
   observes its own state — and that single feedback term turns ringing into settling.
   This is Wiener's wedge in 30 seconds: the brittle system wasn't wrong about the world,
@@ -1119,26 +1120,39 @@ title: The Human Use of Human Beings — A Walkthrough
   let adaptive = { y: TARGET, vy: 0 };
   let rigidTrace = [], adaptTrace = [];
   let perturbY = 0;
-  const GAIN = 0.14;       // both use the same forward gain
-  const FRICTION = 0.97;   // both have the same physical friction (very light)
-  const DERIV = 0.35;      // adaptive's brake-on-self-velocity term
+  // Two modes:
+  //   gentle   — gain inside stability margin; rigid converges uglier, adaptive cleaner
+  //   crank    — gain past stability margin; rigid diverges, adaptive's brake holds it
+  const MODES = {
+    gentle: { GAIN: 0.14, DERIV: 0.35, FRICTION: 0.97 },
+    crank:  { GAIN: 0.42, DERIV: 0.55, FRICTION: 0.99 },
+  };
+  let modeName = 'gentle';
+  let rigidDiverged = false;
 
   function step() {
+    const M = MODES[modeName];
     const target = TARGET + perturbY;
 
     // Rigid: only sees error, pushes proportionally. No self-observation.
     const eR = target - rigid.y;
-    rigid.vy += eR * GAIN;
-    rigid.vy *= FRICTION;
+    rigid.vy += eR * M.GAIN;
+    rigid.vy *= M.FRICTION;
     rigid.y += rigid.vy;
 
     // Adaptive: same drive, plus an extra term that subtracts a fraction of its
     // own current velocity. When it's moving fast it brakes harder. Result: it
     // closes on the target without ringing past it.
     const eA = target - adaptive.y;
-    adaptive.vy += eA * GAIN - adaptive.vy * DERIV;
-    adaptive.vy *= FRICTION;
+    adaptive.vy += eA * M.GAIN - adaptive.vy * M.DERIV;
+    adaptive.vy *= M.FRICTION;
     adaptive.y += adaptive.vy;
+
+    // Detect rigid divergence so we can label it instead of letting it whip
+    // off the chart silently.
+    if (!rigidDiverged && (Math.abs(rigid.y - TARGET) > 600 || Math.abs(rigid.vy) > 80)) {
+      rigidDiverged = true;
+    }
 
     rigidTrace.push(rigid.y);
     if (rigidTrace.length > TRACE_LEN) rigidTrace.shift();
@@ -1165,26 +1179,32 @@ title: The Human Use of Human Beings — A Walkthrough
     // Perturbed target
     s += `<line x1="${traceX0}" y1="${target}" x2="${W - 10}" y2="${target}" stroke="rgba(248,81,73,0.4)" stroke-width="1"/>`;
 
+    // Clip y values to chart so a divergent rigid trace doesn't break SVG bounds.
+    const clamp = v => Math.max(-20, Math.min(H + 20, v));
     // Rigid trace (red)
     s += '<polyline fill="none" stroke="#f85149" stroke-width="2" points="';
     for (let i = 0; i < rigidTrace.length; i++) {
-      s += `${traceX0 + i * dx},${rigidTrace[i]} `;
+      s += `${traceX0 + i * dx},${clamp(rigidTrace[i])} `;
     }
     s += '"/>';
     // Adaptive trace (blue)
     s += '<polyline fill="none" stroke="#58a6ff" stroke-width="2" points="';
     for (let i = 0; i < adaptTrace.length; i++) {
-      s += `${traceX0 + i * dx},${adaptTrace[i]} `;
+      s += `${traceX0 + i * dx},${clamp(adaptTrace[i])} `;
     }
     s += '"/>';
 
     // Current points
-    s += `<circle cx="${traceX0 + (rigidTrace.length - 1) * dx}" cy="${rigid.y}" r="5" fill="#f85149"/>`;
-    s += `<circle cx="${traceX0 + (adaptTrace.length - 1) * dx}" cy="${adaptive.y}" r="5" fill="#58a6ff"/>`;
+    s += `<circle cx="${traceX0 + (rigidTrace.length - 1) * dx}" cy="${clamp(rigid.y)}" r="5" fill="#f85149"/>`;
+    s += `<circle cx="${traceX0 + (adaptTrace.length - 1) * dx}" cy="${clamp(adaptive.y)}" r="5" fill="#58a6ff"/>`;
 
     // Labels
-    s += `<rect x="10" y="20" width="14" height="3" fill="#f85149"/><text x="30" y="26" fill="#c9d1d9" font-size="12" font-family="sans-serif">rigid (fixed gain)</text>`;
-    s += `<rect x="10" y="40" width="14" height="3" fill="#58a6ff"/><text x="30" y="46" fill="#c9d1d9" font-size="12" font-family="sans-serif">adaptive (tunes gain on error)</text>`;
+    s += `<rect x="10" y="20" width="14" height="3" fill="#f85149"/><text x="30" y="26" fill="#c9d1d9" font-size="12" font-family="sans-serif">rigid (P only)</text>`;
+    s += `<rect x="10" y="40" width="14" height="3" fill="#58a6ff"/><text x="30" y="46" fill="#c9d1d9" font-size="12" font-family="sans-serif">adaptive (PD: also brakes on self-velocity)</text>`;
+    s += `<text x="${W - 10}" y="20" text-anchor="end" fill="#8b949e" font-size="11" font-family="sans-serif">mode: ${modeName === 'gentle' ? 'gentle gain (both stable)' : 'past margin (rigid unstable)'}</text>`;
+    if (rigidDiverged) {
+      s += `<text x="${W - 10}" y="40" text-anchor="end" fill="#f85149" font-size="12" font-family="sans-serif" font-weight="bold">rigid: divergent</text>`;
+    }
     s += `<text x="10" y="${H - 10}" fill="#8b949e" font-size="11" font-family="sans-serif">time →</text>`;
 
     svg.innerHTML = s;
@@ -1204,6 +1224,25 @@ title: The Human Use of Human Beings — A Walkthrough
     rigidTrace = []; adaptTrace = [];
     perturbY = 0;
     slider.value = 50;
+    rigidDiverged = false;
+  });
+
+  const modeBtn = document.getElementById('feedback-mode');
+  const takeaway = document.getElementById('feedback-takeaway');
+  const TAKEAWAY = {
+    gentle: `Both controllers have identical strength. The only difference is that the adaptive one observes its own state — and that single feedback term turns ringing into settling. This is Wiener's wedge in 30 seconds: the brittle system wasn't wrong about the world, it was just blind to itself. Loop closure is the upgrade, not more force.`,
+    crank: `Crank the gain past the stability margin and the rigid loop literally can't survive — its corrections amplify each cycle until it diverges. The adaptive loop sees itself moving and brakes, so it stays stable at a gain the rigid one can't touch. This is the deeper Wiener point: self-observation isn't just nicer, it unlocks operating regimes the blind system has no access to.`,
+  };
+  modeBtn.addEventListener('click', () => {
+    modeName = (modeName === 'gentle') ? 'crank' : 'gentle';
+    modeBtn.textContent = (modeName === 'gentle') ? 'Mode: gentle gain' : 'Mode: past margin';
+    takeaway.textContent = TAKEAWAY[modeName];
+    rigid = { y: TARGET, vy: 0 };
+    adaptive = { y: TARGET, vy: 0 };
+    rigidTrace = []; adaptTrace = [];
+    perturbY = 0;
+    slider.value = 50;
+    rigidDiverged = false;
   });
 })();
 
