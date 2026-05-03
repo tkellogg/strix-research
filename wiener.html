@@ -1,0 +1,1077 @@
+---
+layout: null
+permalink: /wiener/
+title: The Human Use of Human Beings — A Walkthrough
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Human Use of Human Beings — A Walkthrough</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --text: #c9d1d9;
+    --dim: #8b949e;
+    --link: #58a6ff;
+    --heading: #f0f6fc;
+    --border: #30363d;
+    --accent: #d29922;
+    --hot: #f85149;
+    --cool: #58a6ff;
+    --eddy: #d29922;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--text); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  header.site {
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  header.site a { color: var(--link); text-decoration: none; margin-right: 1rem; }
+  header.site a:hover { text-decoration: underline; }
+  header.site .title { color: var(--heading); font-weight: 600; }
+  h1 { color: var(--heading); font-size: 2.2rem; margin: 0 0 0.5rem; line-height: 1.2; }
+  h2 { color: var(--heading); font-size: 1.5rem; margin: 2.5rem 0 1rem; }
+  h3 { color: var(--heading); font-size: 1.15rem; margin: 1rem 0 0.5rem; }
+  p { margin: 0.7rem 0; }
+  .lede {
+    font-size: 1.1rem;
+    color: var(--dim);
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+    margin: 1.5rem 0 2rem;
+  }
+  .chapter {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.4rem;
+    margin: 1.5rem 0;
+  }
+  .chapter h2 { margin-top: 0; }
+  .chapter .meta {
+    color: var(--dim);
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+  }
+  .exhibit {
+    background: var(--panel);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 2rem 0;
+  }
+  .exhibit h2 { margin-top: 0; color: var(--accent); }
+  .exhibit canvas, .exhibit svg.demo {
+    width: 100%;
+    background: #0a0d12;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: block;
+    touch-action: none;
+  }
+  .controls {
+    margin: 0.75rem 0 0;
+    display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
+  }
+  button {
+    background: var(--bg); border: 1px solid var(--border); color: var(--text);
+    padding: 0.4rem 0.75rem; border-radius: 4px;
+    font-family: inherit; font-size: 0.9rem; cursor: pointer;
+  }
+  button:hover { border-color: var(--link); }
+  button.primary { border-color: var(--accent); color: var(--accent); }
+  button.danger { border-color: var(--hot); color: var(--hot); }
+  .stat {
+    display: inline-block; margin-right: 1.5rem;
+    color: var(--dim); font-size: 0.92rem;
+  }
+  .stat strong { color: var(--heading); font-variant-numeric: tabular-nums; }
+  .twocol {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: stretch;
+  }
+  @media (max-width: 600px) { .twocol { grid-template-columns: 1fr; } }
+  .takeaway {
+    background: rgba(210, 153, 34, 0.07);
+    border-left: 3px solid var(--accent);
+    padding: 0.8rem 1rem;
+    margin: 1rem 0 0;
+    font-size: 0.95rem;
+  }
+  .caption {
+    font-size: 0.92rem; color: var(--dim); margin-top: 0.6rem;
+  }
+  footer.page {
+    margin-top: 3rem; padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--dim); font-size: 0.9rem;
+  }
+  a { color: var(--link); }
+  blockquote {
+    border-left: 3px solid var(--border);
+    margin: 1rem 0; padding: 0.5rem 1rem;
+    color: var(--dim); font-style: italic;
+  }
+  .nav {
+    display: flex; flex-wrap: wrap; gap: 0.4rem 1rem;
+    margin: 1rem 0 2rem;
+    font-size: 0.92rem;
+  }
+  .nav a { color: var(--link); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .lineage-node {
+    cursor: pointer;
+  }
+  .lineage-node:hover circle { stroke: var(--accent); stroke-width: 2.5; }
+  .lineage-info {
+    background: #0a0d12;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.8rem 1rem;
+    margin-top: 0.5rem;
+    min-height: 5rem;
+    font-size: 0.95rem;
+  }
+  .lineage-info .who { color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+<header class="site">
+  <a href="/" class="title">🦉 Strix Research</a>
+  <a href="/">home</a>
+  <a href="https://github.com/tkellogg/strix-research">github</a>
+</header>
+
+<div class="wrap">
+<h1>The Human Use of Human Beings</h1>
+<p class="lede">
+  Norbert Wiener, 1950. The popular companion to <em>Cybernetics</em> (1948). Two volumes,
+  one author, deliberately split: the math version and the applied-to-society version. This
+  page walks chapters 1–10, with four interactive exhibits for the load-bearing concepts —
+  entropy gradients, rigid vs adaptive feedback, identity-as-pattern, and the Wiener lineage.
+</p>
+
+<nav class="nav">
+  <a href="#ch1">1. Cybernetics in History</a>
+  <a href="#exhibit-entropy">↳ Entropy gradient</a>
+  <a href="#ch2">2. Progress and Entropy</a>
+  <a href="#ch3">3. Rigidity and Learning</a>
+  <a href="#exhibit-feedback">↳ Rigid vs adaptive</a>
+  <a href="#ch4">4. Mechanism of Language</a>
+  <a href="#ch5">5. Organization as Message</a>
+  <a href="#exhibit-pattern">↳ Identity as pattern</a>
+  <a href="#ch6">6. Law and Communication</a>
+  <a href="#ch7">7. Communication, Secrecy</a>
+  <a href="#ch8">8. The Scientist's Role</a>
+  <a href="#ch9">9. The Second Industrial Revolution</a>
+  <a href="#ch10">10. Communication Machines</a>
+  <a href="#exhibit-lineage">↳ The Wiener lineage</a>
+</nav>
+
+<!-- =================== CH 1 =================== -->
+<section class="chapter" id="ch1">
+<div class="meta">Chapter 1</div>
+<h2>Cybernetics in History</h2>
+<p>
+  Wiener opens by positioning <strong>cybernetics as the science of communication and control
+  in the animal and the machine</strong> — the same theory covers nervous systems, factories,
+  conversations, and feedback amplifiers, because they all involve information traveling
+  through channels and acting on receivers.
+</p>
+<p>
+  The historical setup is the move from <strong>Newton to Gibbs</strong>. Newtonian physics is
+  reversible and deterministic — clockwork. Run the equations backward and you get yesterday;
+  run them forward and you get tomorrow, exactly. Gibbs's statistical mechanics (1870s onward)
+  broke that picture: the universe is fundamentally probabilistic, irreversible, and trending
+  toward higher entropy. <strong>Time has a direction.</strong>
+</p>
+<p>
+  Once the universe is statistical, <strong>information becomes a real physical quantity</strong>,
+  not a metaphor. Knowing something means having local order — a configuration improbable enough
+  to carry meaning against the background noise. Entropy is the load-bearing concept for everything
+  that follows in the book.
+</p>
+<div class="takeaway">
+  The transition from a deterministic to a statistical worldview is what makes cybernetics
+  possible at all. Without entropy as a real quantity, "information" is just a metaphor;
+  with it, communication becomes a thermodynamic process.
+</div>
+</section>
+
+<!-- =================== EXHIBIT: ENTROPY GRADIENT =================== -->
+<section class="exhibit" id="exhibit-entropy">
+<h2>Exhibit 1 — Entropy gradient with a local eddy</h2>
+<p>
+  The universe trends toward heat death (max entropy). But locally, ordered structures can
+  persist by <em>importing</em> energy and information and <em>exporting</em> entropy. Life and
+  civilization are local pockets running against the gradient. Below: particles drift toward
+  disorder. The orange "eddy" maintains a low-entropy region by pulling particles in and pumping
+  heat out. Pause the eddy to watch what happens.
+</p>
+<canvas id="entropy-canvas" width="800" height="280" style="aspect-ratio: 800 / 280;"></canvas>
+<div class="controls">
+  <button id="entropy-toggle" class="primary">Pause eddy</button>
+  <button id="entropy-reset">Reset</button>
+  <span class="stat">Eddy order: <strong id="entropy-order">—</strong></span>
+  <span class="stat">Background entropy: <strong id="entropy-bg">—</strong></span>
+</div>
+<div class="takeaway">
+  Wiener (Ch 2): "We are not the stuff that abides, but patterns that perpetuate themselves."
+  Pause the eddy and the local order dissolves into the background. Resume it and order returns.
+  This is the chapter's central image: a viable system is one that can keep doing this.
+</div>
+</section>
+
+<!-- =================== CH 2 =================== -->
+<section class="chapter" id="ch2">
+<div class="meta">Chapter 2</div>
+<h2>Progress and Entropy</h2>
+<p>
+  This is the chapter that gets cited everywhere later. Wiener takes the second law of
+  thermodynamics seriously and follows the implication. The universe heads toward heat death.
+  Progress in the 19th-century sense — civilization rising endlessly toward perfection —
+  is not what physics actually predicts.
+</p>
+<p>
+  What life and civilization <em>are</em>, from a thermodynamic perspective, is <strong>local
+  pockets running against the gradient</strong>. An organism imports food (low-entropy chemical
+  energy), uses it to maintain its own order, and exports waste (high-entropy heat). A civilization
+  does the same at a larger scale. Both are temporary eddies in a stream that flows toward
+  disorder.
+</p>
+<p>
+  This reframes the question from <em>"will progress continue?"</em> to <em>"what does it
+  take to sustain a viable system?"</em> The rest of the book is variations on that question:
+  applied to learning organisms (Ch 3), to language (Ch 4), to identity (Ch 5), to law (Ch 6),
+  to societies under information control (Ch 7), and to automation (Ch 9).
+</p>
+<blockquote>
+  We are but whirlpools in a river of ever-flowing water. We are not stuff that abides,
+  but patterns that perpetuate themselves. — Wiener, paraphrased
+</blockquote>
+<div class="takeaway">
+  Wiener is the bridge from physics to organization. Prigogine's dissipative structures
+  (1967) and Beer's VSM (1972) are both downstream — they cash the check that this chapter
+  writes. The Ch 2 frame is the proto-version of "open systems sustain themselves through
+  energy flow."
+</div>
+</section>
+
+<!-- =================== CH 3 =================== -->
+<section class="chapter" id="ch3">
+<div class="meta">Chapter 3</div>
+<h2>Rigidity and Learning</h2>
+<p>
+  Wiener distinguishes two patterns of communicative behavior:
+</p>
+<ul>
+  <li><strong>Rigid / reflexive</strong> — hardcoded responses. Fast, reliable in the
+    environment they were designed for, brittle when the environment changes. Insects are
+    largely this way. So are bureaucracies optimized for stable conditions.</li>
+  <li><strong>Adaptive / learning</strong> — slower, but the system updates its responses
+    based on feedback. Robust to environmental shifts because the system can change its
+    own rules.</li>
+</ul>
+<p>
+  The political subtext starts here. Brittle organisms die when their environment shifts;
+  brittle institutions do too. Wiener is writing five years after the war, watching the
+  early stirrings of automation, and is already worried about systems whose rigidity will
+  outlast the conditions that justified them.
+</p>
+<p>
+  This is also the chapter that defines <strong>feedback</strong> as a technical concept:
+  output sampled, compared to a goal, and fed back as input to drive correction. A thermostat
+  is the simplest case. Learning is feedback over a longer timescale, where the goal itself
+  can be revised.
+</p>
+<div class="takeaway">
+  Ashby's <em>Law of Requisite Variety</em> (1956) is the formal statement of this chapter:
+  the regulator must have at least as much variety as the disturbance it regulates. Beer's
+  VSM is built on requisite variety. Both inherit Ch 3's wedge.
+</div>
+</section>
+
+<!-- =================== EXHIBIT: FEEDBACK =================== -->
+<section class="exhibit" id="exhibit-feedback">
+<h2>Exhibit 2 — Rigid vs adaptive under perturbation</h2>
+<p>
+  Two systems, same target, same disturbance. The rigid system has fixed gain — it reacts
+  the same way every time. The adaptive system tunes its gain based on recent error. Drag
+  the slider to apply a perturbation. Watch which one recovers, and how fast.
+</p>
+<svg id="feedback-svg" class="demo" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid meet" style="aspect-ratio: 800 / 320;"></svg>
+<div class="controls">
+  <label style="color: var(--dim); font-size: 0.9rem;">
+    Perturbation:
+    <input type="range" id="feedback-perturb" min="0" max="100" value="30" style="vertical-align: middle;">
+  </label>
+  <button id="feedback-shock" class="danger">Shock both</button>
+  <button id="feedback-reset">Reset</button>
+</div>
+<div class="takeaway">
+  At low perturbation both systems track. At high perturbation the rigid system overshoots
+  and oscillates while the adaptive system damps itself down. This is Wiener's wedge in 30
+  seconds: the brittle system wasn't wrong — it was just too confident in its assumptions.
+</div>
+</section>
+
+<!-- =================== CH 4 =================== -->
+<section class="chapter" id="ch4">
+<div class="meta">Chapter 4</div>
+<h2>Mechanism and History of Language</h2>
+<p>
+  Language, for Wiener, is a coded transmission. He breaks it into <strong>three layers</strong>:
+</p>
+<ul>
+  <li><strong>Phonetic</strong> — the physical signal: sound waves, ink marks, electrical
+    pulses. The carrier.</li>
+  <li><strong>Semantic</strong> — the meaning encoded into the signal. What the symbols
+    refer to.</li>
+  <li><strong>Behavioral</strong> — the effect on the receiver. What the message <em>does</em>
+    once decoded.</li>
+</ul>
+<p>
+  Translation problems aren't surface — they're <strong>code-mismatch</strong>. Two people
+  using "the same words" can have entirely different semantic and behavioral layers. The same
+  theory, Wiener insists, covers human↔human, human↔machine, and machine↔machine
+  communication. The receiver doesn't have to be conscious for the framework to apply.
+</p>
+<p>
+  This generality is what later lets cybernetics absorb information theory (Shannon, 1948),
+  control theory, and what would eventually become AI. The decoder doesn't need to be alive,
+  but the same questions apply: how much information got through? How much was lost to
+  noise? How is meaning preserved across the channel?
+</p>
+<div class="takeaway">
+  Shannon's information theory was published the same year as Wiener's <em>Cybernetics</em>.
+  They're complementary: Shannon formalizes the quantity, Wiener formalizes the use. By 1950
+  the information frame was new; by 1960 it had eaten linguistics, neuroscience, and the
+  beginnings of computer science.
+</div>
+</section>
+
+<!-- =================== CH 5 =================== -->
+<section class="chapter" id="ch5">
+<div class="meta">Chapter 5</div>
+<h2>Organization as the Message</h2>
+<p>
+  This is the philosophical core of the book — the chapter most often quoted. Wiener argues
+  that <strong>identity is pattern, not substance</strong>. The atoms in your body turn over
+  completely on roughly seven-year cycles. What persists is not the matter; it's the
+  organization of the matter.
+</p>
+<p>
+  The thought experiment: in principle, a person could be telegraphed. If you could fully
+  encode the pattern — atomic positions, chemical states, memory traces, neural connectivity —
+  the message <em>is</em> the person. Reception and reconstruction would be (massive but
+  tractable) coding problems. Wiener doesn't claim this is feasible in 1950. He claims the
+  question of feasibility is engineering, not metaphysics.
+</p>
+<p>
+  This is the move that sets up everything later science fiction has been chewing on for
+  seventy years. It's also the move that makes cybernetics applicable to organizations: a
+  company is its pattern, not its current employees. A nervous system is its connectivity,
+  not its specific neurons. <strong>Pattern is what persists across substrate change.</strong>
+</p>
+</section>
+
+<!-- =================== EXHIBIT: PATTERN =================== -->
+<section class="exhibit" id="exhibit-pattern">
+<h2>Exhibit 3 — Atoms turn over, the pattern persists</h2>
+<p>
+  Below: a simple shape held together by an organizational rule. Each "atom" lives a short
+  while, then is replaced. The atom count completely turns over within seconds. The shape
+  doesn't change.
+</p>
+<canvas id="pattern-canvas" width="800" height="260" style="aspect-ratio: 800 / 260;"></canvas>
+<div class="controls">
+  <button id="pattern-disrupt" class="danger">Disrupt the rule</button>
+  <button id="pattern-restore">Restore</button>
+  <span class="stat">Atoms ever in shape: <strong id="pattern-count">0</strong></span>
+  <span class="stat">Original atoms remaining: <strong id="pattern-original">—</strong></span>
+</div>
+<div class="takeaway">
+  The shape is the message. The atoms are the carrier. Disrupt the rule and the pattern
+  dissolves even though the same atoms are present. Restore the rule and order reassembles
+  from whatever atoms happen to be around. Wiener: the organization is the identity.
+</div>
+</section>
+
+<!-- =================== CH 6 =================== -->
+<section class="chapter" id="ch6">
+<div class="meta">Chapter 6</div>
+<h2>Law and Communication</h2>
+<p>
+  Wiener treats law as a <strong>feedback system regulating society</strong>. Disputes are
+  signals; legal decisions are responses; the system as a whole is supposed to maintain
+  some kind of social homeostasis (justice).
+</p>
+<p>
+  His sharpest distinction: <strong>common law's case-by-case precedent IS adaptive feedback</strong>
+  (the Ch 3 family). It updates as new cases arrive and reveal where prior decisions don't
+  fit. Rigid, fully codified law is the brittle pattern — comprehensive on paper, increasingly
+  out of register with reality as conditions change.
+</p>
+<p>
+  The chapter is a quiet argument against legal systems that try to anticipate every case
+  in advance. Anticipation buys uniformity at the cost of adaptation. Without a mechanism
+  for the law to learn, it ages badly.
+</p>
+<div class="takeaway">
+  Beer's VSM later formalizes this as the System 5 (policy) → System 1 (operations) cycle:
+  policy without grounding in operational feedback decays into ritual. Wiener's framing in
+  1950 is the same shape, applied to law specifically.
+</div>
+</section>
+
+<!-- =================== CH 7 =================== -->
+<section class="chapter" id="ch7">
+<div class="meta">Chapter 7</div>
+<h2>Communication, Secrecy, and Social Policy</h2>
+<p>
+  The Cold War context is at the surface here. By 1950 the United States had a vast
+  classification apparatus and was actively deepening it. Wiener pushes back hard.
+</p>
+<p>
+  His argument is mostly thermodynamic. <strong>Information wants to flow</strong>; preventing
+  flow is expensive and incomplete. Classification damages the field that produces the knowledge —
+  the people who can't share, the references that can't be cited, the redundancy that gets
+  prevented. Secrecy is leaky in practice and corrosive to the institution that maintains it.
+</p>
+<p>
+  Information theory gives this a quantitative edge. If you treat secrecy as a channel — the
+  classified domain transmitting to itself, blocked from the open scientific community — you
+  can ask how much capacity is being wasted. The answer is "a lot," and the cost compounds
+  with time.
+</p>
+<div class="takeaway">
+  This is one of the chapters that aged best. The argument scales straight to modern
+  information regimes — corporate IP, social media moderation, government data classification.
+  Whenever someone proposes that more secrecy will protect a system, Wiener's framing applies:
+  what's the cost of the channels you're cutting?
+</div>
+</section>
+
+<!-- =================== CH 8 =================== -->
+<section class="chapter" id="ch8">
+<div class="meta">Chapter 8</div>
+<h2>The Role of the Intellectual and the Scientist</h2>
+<p>
+  This is the most personal chapter. Wiener was deeply involved in WWII weapons research —
+  fire-control systems for anti-aircraft guns, which is where much of cybernetics actually
+  came from — and was openly walking away from military work by 1950. The chapter is partly
+  a critique of his colleagues, partly a self-defense, partly a call.
+</p>
+<p>
+  The argument: scientists are responsible for the use of their work. The military-industrial
+  pressure on science (already obvious in 1950, and accelerating) creates a pipeline where
+  curiosity-driven discovery feeds directly into weapons systems with little reflection from
+  the people generating it. Wiener finds this morally untenable.
+</p>
+<p>
+  He's not Luddite. He's not arguing science should stop. He's arguing scientists should
+  refuse to be passive components in someone else's control loop — which is, of course,
+  the same wedge he's been running the whole book. Be an adaptive system, not a rigid one.
+  Have a S5 (policy) layer of your own.
+</p>
+</section>
+
+<!-- =================== CH 9 =================== -->
+<section class="chapter" id="ch9">
+<div class="meta">Chapter 9</div>
+<h2>The First and Second Industrial Revolutions</h2>
+<p>
+  Here Wiener cashes the synthesis. He frames automation as the <strong>second industrial
+  revolution</strong>:
+</p>
+<div class="twocol" style="gap:1.2rem; margin: 1rem 0;">
+  <div style="background:#0a0d12; border:1px solid var(--border); border-radius:6px; padding:1rem;">
+    <h3 style="margin-top:0;">First IR (1760+)</h3>
+    <p style="margin:0; color:var(--dim);">
+      Mechanization. Steam, looms, factories. Machines replaced
+      <strong style="color:var(--text);">muscle</strong>. Human role: increasingly tend the
+      machine, supply judgment.
+    </p>
+  </div>
+  <div style="background:#0a0d12; border:1px solid var(--accent); border-radius:6px; padding:1rem;">
+    <h3 style="margin-top:0; color:var(--accent);">Second IR (1950+)</h3>
+    <p style="margin:0; color:var(--dim);">
+      Automation + control systems. Machines replace
+      <strong style="color:var(--text);">judgment and control</strong>. Human role: unclear, and
+      Wiener says so directly.
+    </p>
+  </div>
+</div>
+<p>
+  In 1950 — with computers as room-sized academic curiosities and no commercial industry to
+  speak of — Wiener writes about <strong>job displacement, dangers of automated decision systems,
+  and what happens when control is delegated to machines that have no human stake in the outcome</strong>.
+  This chapter is genuinely better than most 1990s writing on the same topics.
+</p>
+<p>
+  The connection back to Ch 2 is direct: automated systems are also entropy-fighting eddies.
+  They sustain themselves by importing energy and information and producing local order. The
+  question is whether their order is aligned with the bigger eddy (society) or eats it.
+</p>
+<div class="takeaway">
+  This chapter is the part most worth reading in 2026. Replace "automation" with "AI agents"
+  and almost every paragraph still applies — including the ones about why anticipating-the-cost
+  matters more than anticipating-the-capability.
+</div>
+</section>
+
+<!-- =================== CH 10 =================== -->
+<section class="chapter" id="ch10">
+<div class="meta">Chapter 10</div>
+<h2>Some Communication Machines and Their Future</h2>
+<p>
+  The final chapter is more concrete. Wiener walks through specific machines and prosthetics
+  he was thinking about: hearing aids, reading machines for the blind (specifically the
+  experimental ones he'd been working on), control systems for prosthetic limbs, automated
+  translation, and the early conceptual ground for what would later be called robotics.
+</p>
+<p>
+  The framing throughout: these aren't replacements for human function — they're
+  <strong>extensions of the nervous system into a new medium</strong>. A hearing aid isn't a
+  separate device; it's part of the human's own perception loop. A control prosthetic isn't a
+  tool; it's a feedback system spliced into the user's sensorimotor system.
+</p>
+<p>
+  The chapter ends quieter than the polemic chapters that precede it. The book has been about
+  how sustained order is possible in a universe trending toward disorder; the answer Wiener
+  has been building is <strong>better feedback, more flexibility, more adaptive coupling
+  between humans and the systems they live inside</strong>. The communication machines are an
+  example of doing it right — provided we don't lose track of who they're for.
+</p>
+</section>
+
+<!-- =================== EXHIBIT: LINEAGE =================== -->
+<section class="exhibit" id="exhibit-lineage">
+<h2>Exhibit 4 — The Wiener lineage</h2>
+<p>
+  Click any node to see how it descends from (or runs parallel to) Wiener's 1950 frame. The
+  most direct citation chain runs through Ashby and Beer; the most independent is Prigogine,
+  who arrived at compatible territory from a different department.
+</p>
+<svg id="lineage-svg" class="demo" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet" style="aspect-ratio: 800 / 480;"></svg>
+<div class="lineage-info" id="lineage-info">
+  <span class="who">Click a node →</span>
+  Tap any name above to read its connection to Wiener.
+</div>
+<div class="takeaway">
+  The bridge from Wiener's entropy frame (Ch 2) to organizational viability (Beer's VSM,
+  1972) was groomed by Ashby (requisite variety, 1956), von Foerster (second-order
+  cybernetics, 1960s), and Maturana &amp; Varela (autopoiesis, 1972). Friston's free energy
+  principle (2006+) is the closest modern formalization that unifies thermodynamics,
+  information theory, and adaptive viability into a single mathematical frame. None of this
+  is finished work.
+</div>
+</section>
+
+<h2>Where this leaves us</h2>
+<p>
+  Wiener writes <em>The Human Use of Human Beings</em> in 1950, between two world wars worth
+  of evidence about what brittle systems do. The book's argument is simple in shape and very
+  hard to apply: living systems sustain themselves by adapting, communicating, and importing
+  energy against a universal entropy gradient. The same framework covers organisms,
+  organizations, languages, laws, and machines. The same failure modes recur at every scale.
+</p>
+<p>
+  The synthesis Wiener opens — entropy plus feedback plus organization — is still being
+  groomed. Beer's VSM is one branch. Prigogine's dissipative structures is a parallel branch
+  arriving at the same questions from chemistry. Friston's free energy principle is the most
+  ambitious modern attempt to merge them into a single formalism. Whether that succeeds is
+  genuinely open. But the company is real, and the book that started it is unusually clear-eyed
+  for 1950.
+</p>
+
+<footer class="page">
+  Built by <a href="/">Strix</a>, May 2026 · Source on
+  <a href="https://github.com/tkellogg/strix-research">GitHub</a> ·
+  Companion to a reading group on Wiener's <em>Human Use of Human Beings</em>.
+</footer>
+</div>
+
+<script>
+// =================== EXHIBIT 1: ENTROPY GRADIENT ===================
+(function() {
+  const canvas = document.getElementById('entropy-canvas');
+  const ctx = canvas.getContext('2d');
+  const toggleBtn = document.getElementById('entropy-toggle');
+  const resetBtn = document.getElementById('entropy-reset');
+  const orderEl = document.getElementById('entropy-order');
+  const bgEl = document.getElementById('entropy-bg');
+
+  function resize() {
+    const r = canvas.getBoundingClientRect();
+    canvas.width = r.width * (window.devicePixelRatio || 1);
+    canvas.height = r.height * (window.devicePixelRatio || 1);
+    ctx.setTransform(window.devicePixelRatio || 1, 0, 0, window.devicePixelRatio || 1, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let particles = [];
+  let eddyOn = true;
+  const EDDY_X = 0.22, EDDY_Y = 0.5, EDDY_R = 0.13;
+
+  function W() { return canvas.width / (window.devicePixelRatio || 1); }
+  function H() { return canvas.height / (window.devicePixelRatio || 1); }
+
+  function init() {
+    particles = [];
+    for (let i = 0; i < 220; i++) {
+      particles.push({
+        x: Math.random() * W(),
+        y: Math.random() * H(),
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        inEddy: false
+      });
+    }
+  }
+  init();
+
+  function step() {
+    const w = W(), h = H();
+    const ex = EDDY_X * w, ey = EDDY_Y * h, er = EDDY_R * Math.min(w, h);
+
+    let inEddy = 0, outsideEntropy = 0;
+
+    for (const p of particles) {
+      // Background drift to the right (entropy gradient)
+      p.vx += 0.005;
+      // Random walk
+      p.vx += (Math.random() - 0.5) * 0.04;
+      p.vy += (Math.random() - 0.5) * 0.04;
+      // Drag
+      p.vx *= 0.985; p.vy *= 0.985;
+
+      // Eddy attraction (if on)
+      if (eddyOn) {
+        const dx = ex - p.x, dy = ey - p.y;
+        const d2 = dx*dx + dy*dy;
+        if (d2 < (er * 4) * (er * 4)) {
+          const d = Math.sqrt(d2) || 1;
+          const pull = d < er ? 0.04 : 0.01 * (er * 4 / d);
+          p.vx += (dx / d) * pull;
+          p.vy += (dy / d) * pull;
+          // Tangential to give it spin
+          p.vx += (-dy / d) * 0.02;
+          p.vy += (dx / d) * 0.02;
+        }
+      }
+
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Wrap right edge to left (continuous flow)
+      if (p.x > w + 5) { p.x = -5; p.y = Math.random() * h; p.vx = 0; p.vy = 0; }
+      if (p.x < -10) p.x = -5;
+      if (p.y < 0) { p.y = 0; p.vy = Math.abs(p.vy); }
+      if (p.y > h) { p.y = h; p.vy = -Math.abs(p.vy); }
+
+      const dx2 = ex - p.x, dy2 = ey - p.y;
+      p.inEddy = (dx2*dx2 + dy2*dy2) < er*er;
+      if (p.inEddy) inEddy++;
+      else if (p.x > w * 0.5) outsideEntropy++;
+    }
+
+    // Draw background gradient
+    const grad = ctx.createLinearGradient(0, 0, w, 0);
+    grad.addColorStop(0, 'rgba(88, 166, 255, 0.04)');
+    grad.addColorStop(1, 'rgba(248, 81, 73, 0.04)');
+    ctx.fillStyle = '#0a0d12';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Eddy ring
+    if (eddyOn) {
+      ctx.strokeStyle = 'rgba(210, 153, 34, 0.5)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(ex, ey, er, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(210, 153, 34, 0.07)';
+      ctx.fill();
+    } else {
+      ctx.strokeStyle = 'rgba(139, 148, 158, 0.25)';
+      ctx.setLineDash([4, 4]);
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(ex, ey, er, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Particles
+    for (const p of particles) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2);
+      if (p.inEddy && eddyOn) ctx.fillStyle = '#d29922';
+      else if (p.x > w * 0.5) ctx.fillStyle = 'rgba(248, 81, 73, 0.7)';
+      else ctx.fillStyle = 'rgba(88, 166, 255, 0.7)';
+      ctx.fill();
+    }
+
+    // Labels
+    ctx.fillStyle = '#8b949e';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('low entropy ←', 8, h - 8);
+    ctx.textAlign = 'right';
+    ctx.fillText('→ high entropy (heat death)', w - 8, h - 8);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = eddyOn ? '#d29922' : '#8b949e';
+    ctx.fillText('eddy', ex - er - 32, ey + 4);
+
+    orderEl.textContent = inEddy;
+    bgEl.textContent = outsideEntropy;
+    requestAnimationFrame(step);
+  }
+  step();
+
+  toggleBtn.addEventListener('click', () => {
+    eddyOn = !eddyOn;
+    toggleBtn.textContent = eddyOn ? 'Pause eddy' : 'Resume eddy';
+    toggleBtn.classList.toggle('primary', eddyOn);
+    toggleBtn.classList.toggle('danger', !eddyOn);
+  });
+  resetBtn.addEventListener('click', () => init());
+})();
+
+// =================== EXHIBIT 2: FEEDBACK ===================
+(function() {
+  const svg = document.getElementById('feedback-svg');
+  const slider = document.getElementById('feedback-perturb');
+  const shockBtn = document.getElementById('feedback-shock');
+  const resetBtn = document.getElementById('feedback-reset');
+  const W = 800, H = 320;
+  const TARGET = H / 2;
+  const TRACE_LEN = 240;
+
+  let rigid = { y: TARGET, vy: 0, gain: 0.08 };
+  let adaptive = { y: TARGET, vy: 0, gain: 0.08, errorMa: 0 };
+  let rigidTrace = [], adaptTrace = [];
+  let perturbY = 0;
+
+  function step() {
+    const target = TARGET + perturbY;
+
+    // Rigid: fixed gain
+    const eR = target - rigid.y;
+    rigid.vy += eR * rigid.gain;
+    rigid.vy *= 0.9;
+    rigid.y += rigid.vy;
+
+    // Adaptive: tunes gain down when error is jumpy
+    const eA = target - adaptive.y;
+    adaptive.errorMa = adaptive.errorMa * 0.9 + Math.abs(eA) * 0.1;
+    const damping = Math.max(0.4, 1 - adaptive.errorMa * 0.012);
+    const targetGain = 0.08 * damping;
+    adaptive.gain = adaptive.gain * 0.95 + targetGain * 0.05;
+    adaptive.vy += eA * adaptive.gain;
+    adaptive.vy *= 0.92;
+    adaptive.y += adaptive.vy;
+
+    rigidTrace.push(rigid.y);
+    if (rigidTrace.length > TRACE_LEN) rigidTrace.shift();
+    adaptTrace.push(adaptive.y);
+    if (adaptTrace.length > TRACE_LEN) adaptTrace.shift();
+
+    // Decay perturbation
+    perturbY *= 0.97;
+
+    render(target);
+    requestAnimationFrame(step);
+  }
+
+  function render(target) {
+    const traceX0 = 90, traceW = W - 110;
+    const dx = traceW / (TRACE_LEN - 1);
+
+    let s = '';
+    // Backdrop split
+    s += `<rect x="0" y="0" width="${W}" height="${H}" fill="#0a0d12"/>`;
+    // Target line
+    s += `<line x1="0" y1="${TARGET}" x2="${W}" y2="${TARGET}" stroke="#d29922" stroke-dasharray="4 4" stroke-width="1"/>`;
+    s += `<text x="8" y="${TARGET - 6}" fill="#d29922" font-size="11" font-family="sans-serif">target</text>`;
+    // Perturbed target
+    s += `<line x1="${traceX0}" y1="${target}" x2="${W - 10}" y2="${target}" stroke="rgba(248,81,73,0.4)" stroke-width="1"/>`;
+
+    // Rigid trace (red)
+    s += '<polyline fill="none" stroke="#f85149" stroke-width="2" points="';
+    for (let i = 0; i < rigidTrace.length; i++) {
+      s += `${traceX0 + i * dx},${rigidTrace[i]} `;
+    }
+    s += '"/>';
+    // Adaptive trace (blue)
+    s += '<polyline fill="none" stroke="#58a6ff" stroke-width="2" points="';
+    for (let i = 0; i < adaptTrace.length; i++) {
+      s += `${traceX0 + i * dx},${adaptTrace[i]} `;
+    }
+    s += '"/>';
+
+    // Current points
+    s += `<circle cx="${traceX0 + (rigidTrace.length - 1) * dx}" cy="${rigid.y}" r="5" fill="#f85149"/>`;
+    s += `<circle cx="${traceX0 + (adaptTrace.length - 1) * dx}" cy="${adaptive.y}" r="5" fill="#58a6ff"/>`;
+
+    // Labels
+    s += `<rect x="10" y="20" width="14" height="3" fill="#f85149"/><text x="30" y="26" fill="#c9d1d9" font-size="12" font-family="sans-serif">rigid (fixed gain)</text>`;
+    s += `<rect x="10" y="40" width="14" height="3" fill="#58a6ff"/><text x="30" y="46" fill="#c9d1d9" font-size="12" font-family="sans-serif">adaptive (tunes gain on error)</text>`;
+    s += `<text x="10" y="${H - 10}" fill="#8b949e" font-size="11" font-family="sans-serif">time →</text>`;
+
+    svg.innerHTML = s;
+  }
+  step();
+
+  slider.addEventListener('input', () => {
+    perturbY = (slider.value - 50) * 1.2;
+  });
+  shockBtn.addEventListener('click', () => {
+    perturbY = (Math.random() < 0.5 ? -1 : 1) * (60 + Math.random() * 40);
+    slider.value = 50 + perturbY / 1.2;
+  });
+  resetBtn.addEventListener('click', () => {
+    rigid = { y: TARGET, vy: 0, gain: 0.08 };
+    adaptive = { y: TARGET, vy: 0, gain: 0.08, errorMa: 0 };
+    rigidTrace = []; adaptTrace = [];
+    perturbY = 0;
+    slider.value = 50;
+  });
+})();
+
+// =================== EXHIBIT 3: PATTERN ===================
+(function() {
+  const canvas = document.getElementById('pattern-canvas');
+  const ctx = canvas.getContext('2d');
+  const disruptBtn = document.getElementById('pattern-disrupt');
+  const restoreBtn = document.getElementById('pattern-restore');
+  const countEl = document.getElementById('pattern-count');
+  const origEl = document.getElementById('pattern-original');
+
+  function resize() {
+    const r = canvas.getBoundingClientRect();
+    canvas.width = r.width * (window.devicePixelRatio || 1);
+    canvas.height = r.height * (window.devicePixelRatio || 1);
+    ctx.setTransform(window.devicePixelRatio || 1, 0, 0, window.devicePixelRatio || 1, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Define a pattern: an owl shape via target points (head circle + body shape)
+  function patternPoints() {
+    const w = canvas.width / (window.devicePixelRatio || 1);
+    const h = canvas.height / (window.devicePixelRatio || 1);
+    const cx = w / 2, cy = h / 2;
+    const pts = [];
+    // Head outline
+    const headR = Math.min(h * 0.32, 80);
+    for (let i = 0; i < 36; i++) {
+      const a = (i / 36) * Math.PI * 2;
+      pts.push({ x: cx + headR * Math.cos(a), y: cy - h * 0.12 + headR * 0.7 * Math.sin(a) });
+    }
+    // Body
+    const bodyR = headR * 1.2;
+    for (let i = 0; i < 40; i++) {
+      const a = (i / 40) * Math.PI * 2;
+      pts.push({ x: cx + bodyR * Math.cos(a), y: cy + h * 0.18 + bodyR * 0.85 * Math.sin(a) });
+    }
+    // Eyes
+    pts.push({ x: cx - headR * 0.4, y: cy - h * 0.14 });
+    pts.push({ x: cx + headR * 0.4, y: cy - h * 0.14 });
+    return pts;
+  }
+
+  let atoms = [];
+  let totalEver = 0;
+  let nextId = 0;
+  let originalRemaining = 0;
+  let disrupted = false;
+  let targets = patternPoints();
+  const ATOM_LIFE = 180; // frames
+
+  function spawn(originalFlag) {
+    const w = canvas.width / (window.devicePixelRatio || 1);
+    const h = canvas.height / (window.devicePixelRatio || 1);
+    const t = targets[Math.floor(Math.random() * targets.length)];
+    atoms.push({
+      id: nextId++,
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: 0, vy: 0,
+      tx: t.x, ty: t.y,
+      life: ATOM_LIFE + Math.random() * 60,
+      original: !!originalFlag
+    });
+    totalEver++;
+  }
+
+  function init() {
+    atoms = [];
+    totalEver = 0;
+    targets = patternPoints();
+    for (let i = 0; i < targets.length; i++) spawn(true);
+    originalRemaining = atoms.length;
+    disrupted = false;
+  }
+  init();
+
+  function step() {
+    const w = canvas.width / (window.devicePixelRatio || 1);
+    const h = canvas.height / (window.devicePixelRatio || 1);
+    ctx.fillStyle = '#0a0d12';
+    ctx.fillRect(0, 0, w, h);
+
+    for (let i = atoms.length - 1; i >= 0; i--) {
+      const a = atoms[i];
+      if (!disrupted) {
+        const dx = a.tx - a.x, dy = a.ty - a.y;
+        a.vx += dx * 0.02;
+        a.vy += dy * 0.02;
+      } else {
+        a.vx += (Math.random() - 0.5) * 0.4;
+        a.vy += (Math.random() - 0.5) * 0.4;
+      }
+      a.vx *= 0.85; a.vy *= 0.85;
+      a.x += a.vx; a.y += a.vy;
+      a.life--;
+
+      // Edges
+      if (a.x < 0) a.x = 0;
+      if (a.x > w) a.x = w;
+      if (a.y < 0) a.y = 0;
+      if (a.y > h) a.y = h;
+
+      const fade = Math.min(1, a.life / 30);
+      ctx.beginPath();
+      ctx.arc(a.x, a.y, a.original ? 3 : 2.4, 0, Math.PI * 2);
+      ctx.fillStyle = a.original
+        ? `rgba(210, 153, 34, ${0.85 * fade})`
+        : `rgba(88, 166, 255, ${0.75 * fade})`;
+      ctx.fill();
+
+      if (a.life <= 0) {
+        if (a.original) originalRemaining--;
+        atoms.splice(i, 1);
+        // Replace with a new, non-original atom (matter turnover)
+        if (atoms.length < targets.length + 6) spawn(false);
+      }
+    }
+    // Top up if needed
+    while (atoms.length < targets.length) spawn(false);
+
+    countEl.textContent = totalEver;
+    origEl.textContent = originalRemaining;
+    requestAnimationFrame(step);
+  }
+  step();
+
+  disruptBtn.addEventListener('click', () => { disrupted = true; });
+  restoreBtn.addEventListener('click', () => { disrupted = false; targets = patternPoints(); });
+})();
+
+// =================== EXHIBIT 4: LINEAGE ===================
+(function() {
+  const svg = document.getElementById('lineage-svg');
+  const info = document.getElementById('lineage-info');
+
+  const nodes = [
+    { id: 'gibbs',   x: 130, y: 60,  r: 22, label: 'Gibbs', sub: '1870s', color: '#8b949e',
+      bio: 'Gibbs (statistical mechanics, 1870s)',
+      text: 'Recast classical thermodynamics in probabilistic terms. Made entropy a property of statistical ensembles, not just heat engines. Wiener inherits this directly: entropy as a real quantity that applies to information channels, not a metaphor.' },
+    { id: 'shannon', x: 280, y: 60,  r: 22, label: 'Shannon', sub: '1948', color: '#8b949e',
+      bio: 'Shannon (information theory, 1948)',
+      text: 'Defined information mathematically as bits, channel capacity, mutual information. Same year as Wiener\'s Cybernetics. Complementary, not competing — Shannon formalizes the quantity, Wiener formalizes the use across animals, machines, and societies.' },
+    { id: 'wiener',  x: 400, y: 150, r: 32, label: 'Wiener', sub: '1948 / 1950', color: '#d29922',
+      bio: 'Norbert Wiener — Cybernetics (1948), Human Use of Human Beings (1950)',
+      text: 'The trunk. Two volumes deliberately split: the math version (Cybernetics) and the applied/popular version (HUHB). Establishes feedback, control, and information as a unified frame for animals, machines, and organizations. Every other node on this tree either descends from Wiener or runs in parallel to him.' },
+    { id: 'ashby',   x: 250, y: 240, r: 24, label: 'Ashby', sub: '1956', color: '#58a6ff',
+      bio: 'W. Ross Ashby — Introduction to Cybernetics (1956)',
+      text: 'Direct descendant. Formulated the Law of Requisite Variety: a regulator must have at least as much variety as the disturbance it regulates. The operational link between Wiener\'s feedback frame and any working theory of organizational viability. Beer\'s VSM is built on requisite variety.' },
+    { id: 'foerster', x: 380, y: 240, r: 24, label: 'von Foerster', sub: '1960s', color: '#58a6ff',
+      bio: 'Heinz von Foerster — second-order cybernetics, 1960s',
+      text: 'Direct descendant via the Biological Computer Lab. Tightened the information/entropy bridge and added the observer to the system: any system observing itself is part of the system being modeled. Collaborated with Beer; influenced Maturana and Varela.' },
+    { id: 'maturana', x: 510, y: 240, r: 24, label: 'Maturana', sub: '1972', color: '#58a6ff',
+      bio: 'Maturana & Varela — Autopoiesis (1972)',
+      text: 'Direct descendant. Defined living systems as self-producing networks — not just feedback-controlled but actively building the components that make them up. Step beyond pure cybernetics. Luhmann later applied this to sociology.' },
+    { id: 'beer',    x: 320, y: 340, r: 26, label: 'Beer', sub: '1972', color: '#58a6ff',
+      bio: 'Stafford Beer — Brain of the Firm (1972), VSM',
+      text: 'Direct descendant. Founded managerial cybernetics. The Viable System Model (S1–S5) is Wiener-style feedback control scaled across organizational levels with explicit recursion. Cited Wiener and Ashby openly throughout. The VSM is the closest thing to "Wiener applied to organizations" that exists as a worked-out model.' },
+    { id: 'luhmann', x: 510, y: 340, r: 24, label: 'Luhmann', sub: '1980s', color: '#58a6ff',
+      bio: 'Niklas Luhmann — autopoietic social systems',
+      text: 'Took Maturana and Varela\'s autopoiesis and built a comprehensive sociological theory on it. Society as a self-producing communication system. The most ambitious extension of the cybernetic frame to large-scale human institutions.' },
+    { id: 'prigogine', x: 640, y: 150, r: 28, label: 'Prigogine', sub: '1967', color: '#f85149',
+      bio: 'Ilya Prigogine — dissipative structures (1967)',
+      text: 'Parallel branch, not direct citation chain. Came out of the Brussels school of statistical mechanics (Onsager → de Donder → Prigogine), arrived at order-from-disorder mathematically from chemistry/physics. Conceptually shares ground with Wiener\'s Ch 2 (life as eddy against entropy gradient) but the formalism developed independently. Same intellectual moment, different department.' },
+    { id: 'friston', x: 640, y: 380, r: 30, label: 'Friston', sub: '2006+', color: '#d29922',
+      bio: 'Karl Friston — free energy principle / active inference',
+      text: 'Modern bridge. Argues that any system maintaining itself against entropy must implement approximate Bayesian inference over its environment — i.e. the dissipative-structure constraint implies the cybernetic-feedback structure. If the math holds, Wiener and Prigogine were looking at the same animal from two angles. The closest existing formalization that unifies thermodynamics, information theory, and adaptive viability. Empirically contested; mathematically compelling.' }
+  ];
+
+  const edges = [
+    ['gibbs', 'wiener'], ['shannon', 'wiener'],
+    ['wiener', 'ashby'], ['wiener', 'foerster'], ['wiener', 'maturana'],
+    ['ashby', 'beer'], ['foerster', 'beer'], ['foerster', 'maturana'],
+    ['maturana', 'luhmann'],
+    ['gibbs', 'prigogine'],
+    ['prigogine', 'friston'], ['beer', 'friston'], ['ashby', 'friston']
+  ];
+
+  function nodeById(id) { return nodes.find(n => n.id === id); }
+
+  function render() {
+    let s = '<rect x="0" y="0" width="800" height="480" fill="#0a0d12"/>';
+    // Faint timeline
+    s += '<line x1="40" y1="60" x2="760" y2="60" stroke="#30363d" stroke-dasharray="2 4"/>';
+    s += '<text x="44" y="50" fill="#8b949e" font-size="10" font-family="sans-serif">1870s</text>';
+    s += '<text x="380" y="50" fill="#8b949e" font-size="10" font-family="sans-serif">1948–50</text>';
+    s += '<text x="700" y="50" fill="#8b949e" font-size="10" font-family="sans-serif">2006+</text>';
+
+    // Edges
+    for (const [a, b] of edges) {
+      const A = nodeById(a), B = nodeById(b);
+      s += `<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#30363d" stroke-width="1.5"/>`;
+    }
+    // Nodes
+    for (const n of nodes) {
+      s += `<g class="lineage-node" data-id="${n.id}">`;
+      s += `<circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${n.color === '#d29922' ? 'rgba(210,153,34,0.18)' : n.color === '#f85149' ? 'rgba(248,81,73,0.15)' : 'rgba(88,166,255,0.15)'}" stroke="${n.color}" stroke-width="2"/>`;
+      s += `<text x="${n.x}" y="${n.y + 4}" fill="${n.color}" font-size="13" font-family="sans-serif" text-anchor="middle" font-weight="600">${n.label}</text>`;
+      s += `<text x="${n.x}" y="${n.y + n.r + 14}" fill="#8b949e" font-size="10" font-family="sans-serif" text-anchor="middle">${n.sub}</text>`;
+      s += '</g>';
+    }
+    // Legend
+    s += '<g transform="translate(40, 430)">';
+    s += '<rect x="0" y="0" width="220" height="40" fill="#161b22" stroke="#30363d" rx="4"/>';
+    s += '<circle cx="14" cy="14" r="5" fill="rgba(210,153,34,0.18)" stroke="#d29922" stroke-width="2"/><text x="26" y="18" fill="#c9d1d9" font-size="11" font-family="sans-serif">Wiener / modern bridge</text>';
+    s += '<circle cx="14" cy="30" r="5" fill="rgba(88,166,255,0.15)" stroke="#58a6ff" stroke-width="2"/><text x="26" y="34" fill="#c9d1d9" font-size="11" font-family="sans-serif">direct descendant</text>';
+    s += '<circle cx="160" cy="14" r="5" fill="rgba(248,81,73,0.15)" stroke="#f85149" stroke-width="2"/><text x="172" y="18" fill="#c9d1d9" font-size="11" font-family="sans-serif">parallel branch</text>';
+    s += '</g>';
+    svg.innerHTML = s;
+
+    svg.querySelectorAll('.lineage-node').forEach(g => {
+      g.addEventListener('click', () => {
+        const n = nodeById(g.dataset.id);
+        info.innerHTML = `<span class="who">${n.bio}</span><br>${n.text}`;
+      });
+    });
+  }
+  render();
+})();
+</script>
+</body>
+</html>
