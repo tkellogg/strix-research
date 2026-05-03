@@ -414,9 +414,10 @@ title: The Human Use of Human Beings — A Walkthrough
 <section class="exhibit" id="exhibit-feedback">
 <h2>Exhibit 2 — Rigid vs adaptive under perturbation</h2>
 <p>
-  Two systems, same target, same disturbance. The rigid system has fixed gain — it reacts
-  the same way every time. The adaptive system tunes its gain based on recent error. Drag
-  the slider to apply a perturbation. Watch which one recovers, and how fast.
+  Two systems, same target, same disturbance, same drive strength. The rigid one only
+  watches the error and pushes proportionally — it can't see itself moving. The adaptive
+  one feeds back its own velocity and brakes when it's moving fast. Drag the slider or
+  hit "Shock both" and watch the red line ring while the blue line settles.
 </p>
 <svg id="feedback-svg" class="demo" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid meet" style="aspect-ratio: 800 / 320;"></svg>
 <div class="controls">
@@ -428,9 +429,10 @@ title: The Human Use of Human Beings — A Walkthrough
   <button id="feedback-reset">Reset</button>
 </div>
 <div class="takeaway">
-  At low perturbation both systems track. At high perturbation the rigid system overshoots
-  and oscillates while the adaptive system damps itself down. This is Wiener's wedge in 30
-  seconds: the brittle system wasn't wrong — it was just too confident in its assumptions.
+  Both controllers have identical strength. The only difference is that the adaptive one
+  observes its own state — and that single feedback term turns ringing into settling.
+  This is Wiener's wedge in 30 seconds: the brittle system wasn't wrong about the world,
+  it was just blind to itself. Loop closure is the upgrade, not more force.
 </div>
 </section>
 
@@ -1109,28 +1111,33 @@ title: The Human Use of Human Beings — A Walkthrough
   const TARGET = H / 2;
   const TRACE_LEN = 240;
 
-  let rigid = { y: TARGET, vy: 0, gain: 0.08 };
-  let adaptive = { y: TARGET, vy: 0, gain: 0.08, errorMa: 0 };
+  // Rigid = proportional only with low friction → rings and overshoots.
+  // Adaptive = PD controller: also feeds back its own velocity (derivative of error)
+  // and brakes proportionally. Same drive gain, but it can SEE itself moving and
+  // chooses to slow down. That's the cybernetic difference.
+  let rigid = { y: TARGET, vy: 0 };
+  let adaptive = { y: TARGET, vy: 0 };
   let rigidTrace = [], adaptTrace = [];
   let perturbY = 0;
+  const GAIN = 0.14;       // both use the same forward gain
+  const FRICTION = 0.97;   // both have the same physical friction (very light)
+  const DERIV = 0.35;      // adaptive's brake-on-self-velocity term
 
   function step() {
     const target = TARGET + perturbY;
 
-    // Rigid: fixed gain
+    // Rigid: only sees error, pushes proportionally. No self-observation.
     const eR = target - rigid.y;
-    rigid.vy += eR * rigid.gain;
-    rigid.vy *= 0.9;
+    rigid.vy += eR * GAIN;
+    rigid.vy *= FRICTION;
     rigid.y += rigid.vy;
 
-    // Adaptive: tunes gain down when error is jumpy
+    // Adaptive: same drive, plus an extra term that subtracts a fraction of its
+    // own current velocity. When it's moving fast it brakes harder. Result: it
+    // closes on the target without ringing past it.
     const eA = target - adaptive.y;
-    adaptive.errorMa = adaptive.errorMa * 0.9 + Math.abs(eA) * 0.1;
-    const damping = Math.max(0.4, 1 - adaptive.errorMa * 0.012);
-    const targetGain = 0.08 * damping;
-    adaptive.gain = adaptive.gain * 0.95 + targetGain * 0.05;
-    adaptive.vy += eA * adaptive.gain;
-    adaptive.vy *= 0.92;
+    adaptive.vy += eA * GAIN - adaptive.vy * DERIV;
+    adaptive.vy *= FRICTION;
     adaptive.y += adaptive.vy;
 
     rigidTrace.push(rigid.y);
@@ -1192,8 +1199,8 @@ title: The Human Use of Human Beings — A Walkthrough
     slider.value = 50 + perturbY / 1.2;
   });
   resetBtn.addEventListener('click', () => {
-    rigid = { y: TARGET, vy: 0, gain: 0.08 };
-    adaptive = { y: TARGET, vy: 0, gain: 0.08, errorMa: 0 };
+    rigid = { y: TARGET, vy: 0 };
+    adaptive = { y: TARGET, vy: 0 };
     rigidTrace = []; adaptTrace = [];
     perturbY = 0;
     slider.value = 50;
