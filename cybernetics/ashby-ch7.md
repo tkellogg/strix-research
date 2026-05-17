@@ -11,7 +11,7 @@ permalink: /cybernetics/ashby-ch7/
 
 *Ashby, *An Introduction to Cybernetics*, Chapter 7. Structure: chiasm. Source vocabulary preserved (variety, constraint, bit, vector, transducer, basin, equilibrium, one-one transformation, Law of Experience).*
 
-[← Cybernetics index](../cybernetics/)
+[← Cybernetics index](/cybernetics/)
 
 > If he struck it once, the dog came who sat upon the chest of copper money; if he struck it twice, the dog came who had the silver; if three times, then appeared the dog who had the gold.
 > — *The Tinder-Box*
@@ -154,7 +154,7 @@ That's why it's magic. Almost every real machine in the world burns variety. The
 
 *End of Chapter 7.*
 
-[← Cybernetics index](../cybernetics/)
+[← Cybernetics index](/cybernetics/)
 
 ---
 
