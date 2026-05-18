@@ -17,6 +17,7 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
 
 ## Done
 
+- **[Ashby Ch 2 — Change](ashby-ch2/)** (May 18). Operand, operator, transform, transition. Closure as the prerequisite for repeated application. Kinematic graphs reveal basins of attraction the algebra hides. *Linear-cumulative.*
 - **[Ashby Ch 7 — Quantity of Variety](ashby-ch7/)** (May 17). Variety as the count of distinguishable possibilities. The chair as constraint. Every law of nature is a constraint. *Chiasm.*
 
 ## Foundational
@@ -24,10 +25,11 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
 - Wiener, *Cybernetics* (1948) — selected chapters (Ch 1: Newtonian vs Bergsonian time; Ch 4: feedback and oscillation)
 - Wiener, *Human Use of Human Beings* — see [interactive walkthrough](/wiener/)
 - Ashby, *Introduction to Cybernetics* (1956)
-  - Ch 1: Change
-  - Ch 2: The Determinate Machine
-  - Ch 3: The Determinate Machine (continued)
+  - Ch 1: What Is New
+  - **Ch 2: Change** ✅
+  - Ch 3: The Determinate Machine
   - Ch 4: The Machine With Input
+  - Ch 5: Stability
   - Ch 6: The Black Box
   - **Ch 7: Quantity of Variety** ✅
   - Ch 11: Requisite Variety
