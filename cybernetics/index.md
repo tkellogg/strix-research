@@ -17,6 +17,7 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
 
 ## Done
 
+- **[Ashby Ch 5 — Stability](ashby-ch5/)** (May 19). The whole stack: equilibrium → cycle → stable set (closure) → stable under D → stable to a range of D → stable when coupled. The veto principle: a coupled whole rests only where every part can rest given what the others are doing. Homeostat falls out as a corollary. Positive feedback need not destabilise. *Linear-cumulative.*
 - **[Ashby Ch 12 — The Error-Controlled Regulator](ashby-ch12/)** (May 19). Anticipatory regulator vs error-controlled regulator. The impossibility proof: the more R succeeds at holding E constant, the more it blocks the channel it needs. Continuity rescues the design; Markovian "hunt-and-stick" makes it tractable. Homeostat, telephone selector, blood-pH. *Contrast.*
 - **[Ashby Ch 11 — Requisite Variety](ashby-ch11/)** (May 19). The Law: V_O ≥ V_D − V_R. Variety can destroy variety. The chapter sets aside regulation to watch a game, derives the bound, then reveals the game was regulation all along. R's capacity as regulator cannot exceed R's capacity as channel. Hitler's control = 1 man-power. *Chiasm.*
 - **[Ashby Ch 3 — The Determinate Machine](ashby-ch3/)** (May 19). A machine is anything behaving like a closed single-valued transformation. State, operand, trajectory, canonical representation. Phase space makes the algebra visible. The closing inversion: a "system" is not a thing in the world, it is the list of variables we chose. *Contrast.*
@@ -32,7 +33,7 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
   - **Ch 2: Change** ✅
   - **Ch 3: The Determinate Machine** ✅
   - Ch 4: The Machine With Input
-  - Ch 5: Stability
+  - **Ch 5: Stability** ✅
   - Ch 6: The Black Box
   - **Ch 7: Quantity of Variety** ✅
   - **Ch 11: Requisite Variety** ✅
