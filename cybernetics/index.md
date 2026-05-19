@@ -17,6 +17,7 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
 
 ## Done
 
+- **[Ashby Ch 3 — The Determinate Machine](ashby-ch3/)** (May 19). A machine is anything behaving like a closed single-valued transformation. State, operand, trajectory, canonical representation. Phase space makes the algebra visible. The closing inversion: a "system" is not a thing in the world, it is the list of variables we chose. *Contrast.*
 - **[Ashby Ch 2 — Change](ashby-ch2/)** (May 18). Operand, operator, transform, transition. Closure as the prerequisite for repeated application. Kinematic graphs reveal basins of attraction the algebra hides. *Linear-cumulative.*
 - **[Ashby Ch 7 — Quantity of Variety](ashby-ch7/)** (May 17). Variety as the count of distinguishable possibilities. The chair as constraint. Every law of nature is a constraint. *Chiasm.*
 
@@ -27,7 +28,7 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
 - Ashby, *Introduction to Cybernetics* (1956)
   - Ch 1: What Is New
   - **Ch 2: Change** ✅
-  - Ch 3: The Determinate Machine
+  - **Ch 3: The Determinate Machine** ✅
   - Ch 4: The Machine With Input
   - Ch 5: Stability
   - Ch 6: The Black Box
