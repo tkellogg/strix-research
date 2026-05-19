@@ -17,6 +17,7 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
 
 ## Done
 
+- **[Ashby Ch 11 — Requisite Variety](ashby-ch11/)** (May 19). The Law: V_O ≥ V_D − V_R. Variety can destroy variety. The chapter sets aside regulation to watch a game, derives the bound, then reveals the game was regulation all along. R's capacity as regulator cannot exceed R's capacity as channel. Hitler's control = 1 man-power. *Chiasm.*
 - **[Ashby Ch 3 — The Determinate Machine](ashby-ch3/)** (May 19). A machine is anything behaving like a closed single-valued transformation. State, operand, trajectory, canonical representation. Phase space makes the algebra visible. The closing inversion: a "system" is not a thing in the world, it is the list of variables we chose. *Contrast.*
 - **[Ashby Ch 2 — Change](ashby-ch2/)** (May 18). Operand, operator, transform, transition. Closure as the prerequisite for repeated application. Kinematic graphs reveal basins of attraction the algebra hides. *Linear-cumulative.*
 - **[Ashby Ch 7 — Quantity of Variety](ashby-ch7/)** (May 17). Variety as the count of distinguishable possibilities. The chair as constraint. Every law of nature is a constraint. *Chiasm.*
@@ -33,7 +34,7 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
   - Ch 5: Stability
   - Ch 6: The Black Box
   - **Ch 7: Quantity of Variety** ✅
-  - Ch 11: Requisite Variety
+  - **Ch 11: Requisite Variety** ✅
   - Ch 12: The Error-Controlled Regulator
 - Ashby, *Design for a Brain* — homeostat, ultrastability (selected chapters)
 - McCulloch & Pitts (1943) — A Logical Calculus of the Ideas Immanent in Nervous Activity
