@@ -17,6 +17,7 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
 
 ## Done
 
+- **[Ashby Ch 4 — The Machine With Input](ashby-ch4/)** (May 20). Open: a crane controlled by a driver, parameters set from outside, deliberate switches. Hinge: feedback is dismissed as the central concept — "the exact definition of 'feedback' is nowhere important," and with more than a handful of parts complex systems must be treated as a whole, not as an interlaced set of loops. Close: the input picture inverts. In very large systems the locus of history is *local* — self-locking ratchets (the closed oysters) and breeding properties (*k* > 1, autocatalysis, Darwinian evolution). No operator, no switch, no input. *Chiasm.*
 - **[Ashby Ch 6 — The Black Box](ashby-ch6/)** (May 19). Open: an engineer faces a sealed box. Close: every object is a Black Box; "what's inside" is the relation between observer and what is distinguished. Protocol → canonical representation → isomorphism (analogues) → homomorphism (models) → emergence as epistemic gap → memory as the trace of unobservable variables. *Chiasm.*
 - **[Ashby Ch 5 — Stability](ashby-ch5/)** (May 19). The whole stack: equilibrium → cycle → stable set (closure) → stable under D → stable to a range of D → stable when coupled. The veto principle: a coupled whole rests only where every part can rest given what the others are doing. Homeostat falls out as a corollary. Positive feedback need not destabilise. *Linear-cumulative.*
 - **[Ashby Ch 12 — The Error-Controlled Regulator](ashby-ch12/)** (May 19). Anticipatory regulator vs error-controlled regulator. The impossibility proof: the more R succeeds at holding E constant, the more it blocks the channel it needs. Continuity rescues the design; Markovian "hunt-and-stick" makes it tractable. Homeostat, telephone selector, blood-pH. *Contrast.*
@@ -33,7 +34,7 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
   - Ch 1: What Is New
   - **Ch 2: Change** ✅
   - **Ch 3: The Determinate Machine** ✅
-  - Ch 4: The Machine With Input
+  - **Ch 4: The Machine With Input** ✅
   - **Ch 5: Stability** ✅
   - **Ch 6: The Black Box** ✅
   - **Ch 7: Quantity of Variety** ✅
