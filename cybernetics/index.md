@@ -17,6 +17,7 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
 
 ## Done
 
+- **[Ashby *Design for a Brain* — The Ultrastable System (Homeostat)](ashby-homeostat/)** (May 21). Step-functions plus fields generate a selective process: an **ultrastable system** rejects fields that lead to a critical state and retains those that don't. Ashby builds the homeostat — four magnets in water troughs, uniselectors with Fisher-Yates random values, 390,625 combinations — to test the principle physically. The aileron analogy: ordinary stable systems persist in their wrong action; ultrastable systems change the field until it is stable. The closing test (a glass fibre joining two magnets) shows the machine adapting to a constraint that was never in its design spec. *Linear-cumulative.*
 - **[Ashby Ch 4 — The Machine With Input](ashby-ch4/)** (May 20). Open: a crane controlled by a driver, parameters set from outside, deliberate switches. Hinge: feedback is dismissed as the central concept — "the exact definition of 'feedback' is nowhere important," and with more than a handful of parts complex systems must be treated as a whole, not as an interlaced set of loops. Close: the input picture inverts. In very large systems the locus of history is *local* — self-locking ratchets (the closed oysters) and breeding properties (*k* > 1, autocatalysis, Darwinian evolution). No operator, no switch, no input. *Chiasm.*
 - **[Ashby Ch 6 — The Black Box](ashby-ch6/)** (May 19). Open: an engineer faces a sealed box. Close: every object is a Black Box; "what's inside" is the relation between observer and what is distinguished. Protocol → canonical representation → isomorphism (analogues) → homomorphism (models) → emergence as epistemic gap → memory as the trace of unobservable variables. *Chiasm.*
 - **[Ashby Ch 5 — Stability](ashby-ch5/)** (May 19). The whole stack: equilibrium → cycle → stable set (closure) → stable under D → stable to a range of D → stable when coupled. The veto principle: a coupled whole rests only where every part can rest given what the others are doing. Homeostat falls out as a corollary. Positive feedback need not destabilise. *Linear-cumulative.*
@@ -40,7 +41,8 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
   - **Ch 7: Quantity of Variety** ✅
   - **Ch 11: Requisite Variety** ✅
   - **Ch 12: The Error-Controlled Regulator** ✅
-- Ashby, *Design for a Brain* — homeostat, ultrastability (selected chapters)
+- Ashby, *Design for a Brain* (1952)
+  - **Ch 8: The Ultrastable System (Homeostat)** ✅
 - McCulloch & Pitts (1943) — A Logical Calculus of the Ideas Immanent in Nervous Activity
 - Conant & Ashby (1970) — Every Good Regulator of a System Must Be a Model of That System
 
