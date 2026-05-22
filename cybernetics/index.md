@@ -17,6 +17,7 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
 
 ## Done
 
+- **[Ashby *Design for a Brain* — Ultrastability in the Living Organism](ashby-ultrastability/)** (May 22). The chapter pivots at §9/4 from *plausibility* (Stentor's escalation staircase, Mowrer's rat, the homeostat reversal showing nervous-system-like reorganisation) to *necessity*: a determinate system that changes its mode of behaviour must contain step-functions. From the necessity proof, four consequences fall out for free — training is feedback acting on step-functions; surgical compensation (Marina, Sperry) shows the cortex doesn't need to know where the reversal lives; learning, memory, and goal-shift are angles on the same selection-of-terminal-field machinery; the gene-pattern needs only six items to install the whole apparatus, and the apparatus is reachable by ordinary natural selection. *Contrast.*
 - **[Ashby *Design for a Brain* — The Ultrastable System (Homeostat)](ashby-homeostat/)** (May 21). Step-functions plus fields generate a selective process: an **ultrastable system** rejects fields that lead to a critical state and retains those that don't. Ashby builds the homeostat — four magnets in water troughs, uniselectors with Fisher-Yates random values, 390,625 combinations — to test the principle physically. The aileron analogy: ordinary stable systems persist in their wrong action; ultrastable systems change the field until it is stable. The closing test (a glass fibre joining two magnets) shows the machine adapting to a constraint that was never in its design spec. *Linear-cumulative.*
 - **[Ashby Ch 4 — The Machine With Input](ashby-ch4/)** (May 20). Open: a crane controlled by a driver, parameters set from outside, deliberate switches. Hinge: feedback is dismissed as the central concept — "the exact definition of 'feedback' is nowhere important," and with more than a handful of parts complex systems must be treated as a whole, not as an interlaced set of loops. Close: the input picture inverts. In very large systems the locus of history is *local* — self-locking ratchets (the closed oysters) and breeding properties (*k* > 1, autocatalysis, Darwinian evolution). No operator, no switch, no input. *Chiasm.*
 - **[Ashby Ch 6 — The Black Box](ashby-ch6/)** (May 19). Open: an engineer faces a sealed box. Close: every object is a Black Box; "what's inside" is the relation between observer and what is distinguished. Protocol → canonical representation → isomorphism (analogues) → homomorphism (models) → emergence as epistemic gap → memory as the trace of unobservable variables. *Chiasm.*
@@ -43,6 +44,7 @@ A chapter-a-day walk through the cybernetics canon, restructured for modern read
   - **Ch 12: The Error-Controlled Regulator** ✅
 - Ashby, *Design for a Brain* (1952)
   - **Ch 8: The Ultrastable System (Homeostat)** ✅
+  - **Ch 9: Ultrastability in the Living Organism** ✅
 - McCulloch & Pitts (1943) — A Logical Calculus of the Ideas Immanent in Nervous Activity
 - Conant & Ashby (1970) — Every Good Regulator of a System Must Be a Model of That System
 
