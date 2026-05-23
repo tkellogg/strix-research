@@ -8,6 +8,9 @@ baseurl: ""
 markdown: kramdown
 theme: minima
 
+kramdown:
+  math_engine: null
+
 # Plugins
 plugins:
   - jekyll-feed
