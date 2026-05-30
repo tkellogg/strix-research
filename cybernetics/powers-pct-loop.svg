@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 460" font-family="-apple-system, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#222"/>
+    </marker>
+    <marker id="arrowR" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#b3261e"/>
+    </marker>
+  </defs>
+
+  <!-- region bands -->
+  <rect x="0" y="0" width="680" height="270" fill="#f4f6f8"/>
+  <rect x="0" y="270" width="680" height="190" fill="#eef1ee"/>
+  <line x1="0" y1="270" x2="680" y2="270" stroke="#b9c2cc" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="14" y="24" font-size="13" fill="#69737d" font-weight="600">SYSTEM</text>
+  <text x="14" y="294" font-size="13" fill="#69737d" font-weight="600">ENVIRONMENT</text>
+
+  <!-- reference signal from higher order -->
+  <text x="190" y="34" font-size="13" fill="#222">reference-signal <tspan font-style="italic" font-weight="700">r</tspan>  (from higher order)</text>
+  <line x1="240" y1="42" x2="240" y2="78" stroke="#222" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Comparator -->
+  <rect x="180" y="80" width="160" height="64" rx="8" fill="#fff" stroke="#222" stroke-width="2"/>
+  <text x="260" y="108" font-size="15" text-anchor="middle" font-weight="700">Comparator (C)</text>
+  <text x="260" y="130" font-size="14" text-anchor="middle" font-style="italic">e = r − f</text>
+
+  <!-- Output Function -->
+  <rect x="430" y="170" width="170" height="64" rx="8" fill="#fff" stroke="#222" stroke-width="2"/>
+  <text x="515" y="198" font-size="15" text-anchor="middle" font-weight="700">Output Fn (O)</text>
+  <text x="515" y="220" font-size="14" text-anchor="middle" font-style="italic">o = O(e)</text>
+
+  <!-- Environment Function -->
+  <rect x="255" y="330" width="170" height="64" rx="8" fill="#fff" stroke="#222" stroke-width="2"/>
+  <text x="340" y="358" font-size="15" text-anchor="middle" font-weight="700">Environment (E)</text>
+  <text x="340" y="380" font-size="14" text-anchor="middle" font-style="italic">vₑ = E(o)</text>
+
+  <!-- Feedback Function -->
+  <rect x="70" y="170" width="170" height="64" rx="8" fill="#fff" stroke="#222" stroke-width="2"/>
+  <text x="155" y="198" font-size="15" text-anchor="middle" font-weight="700">Feedback Fn (F)</text>
+  <text x="155" y="220" font-size="14" text-anchor="middle" font-style="italic">f = F(vₑ)</text>
+
+  <!-- C -> O : error signal -->
+  <path d="M340,128 L515,128 L515,170" fill="none" stroke="#222" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="430" y="120" font-size="13" fill="#222">error-signal <tspan font-style="italic" font-weight="700">e</tspan></text>
+
+  <!-- O -> E : output signal (crosses output boundary) -->
+  <path d="M515,234 L515,362 L425,362" fill="none" stroke="#222" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="525" y="290" font-size="13" fill="#222">output <tspan font-style="italic" font-weight="700">o</tspan></text>
+
+  <!-- E -> F : environmental variable (crosses input boundary) -->
+  <path d="M255,362 L155,362 L155,234" fill="none" stroke="#222" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="80" y="290" font-size="13" fill="#222">env. variable <tspan font-style="italic" font-weight="700">vₑ</tspan></text>
+
+  <!-- F -> C : feedback signal (the perception) -->
+  <path d="M155,170 L155,112 L180,112" fill="none" stroke="#222" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="60" y="150" font-size="13" fill="#222">feedback-signal <tspan font-style="italic" font-weight="700">f</tspan></text>
+  <text x="60" y="166" font-size="11.5" fill="#69737d">(the perception)</text>
+
+  <!-- disturbance -->
+  <line x1="640" y1="362" x2="535" y2="362" stroke="#b3261e" stroke-width="2" marker-end="url(#arrowR)"/>
+  <text x="548" y="352" font-size="13" fill="#b3261e" font-weight="600">disturbance</text>
+
+  <!-- caption -->
+  <text x="340" y="438" font-size="13.5" text-anchor="middle" fill="#333">The system holds <tspan font-style="italic" font-weight="700">f</tspan> at <tspan font-style="italic" font-weight="700">r</tspan>. Output <tspan font-style="italic" font-weight="700">o</tspan> varies to cancel disturbance — behavior is the side-effect.</text>
+</svg>
