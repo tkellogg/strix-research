@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Powers, Clark & McFarland — Behavior: The Control of Perception
+title: "Powers, Clark & McFarland — Behavior: The Control of Perception"
 date: 2026-05-30
 source: Powers, W.T., Clark, R.K., & McFarland, R.L. "A General Feedback Theory of Human Behavior, Parts I & II." Perceptual and Motor Skills, 1960, 11, 71-88 and 309-323. Reprinted in Living Control Systems.
 mode: chiasm
